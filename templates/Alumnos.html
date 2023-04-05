@@ -1,0 +1,54 @@
+{%extends "layout.html"%}
+{%block main%}
+<div class="container" style='margin-top: 2%;'>
+
+  <div class="card-container boder-light">
+    <div class="img">
+      <h1 style='left: 40px;'>Registro de Estudiantes</h1>
+      <img src="/static/img/birrete.gif" style='max-width: 300px; margin-top:21%;'>
+    </div>
+    <form action="/RegisterStudent" method="post">
+         <div class="input-container">
+             <input type="text" id="input" name='Nombre' required="">
+             <label for="input" class="label">Nombre Alumno</label>
+             <div class="underline"></div>
+           </div>
+           <div class="input-container">
+            <input type="text" id="input" name='Carnet' required="">
+            <label for="input" class="label">Carnet Estudiantil</label>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="input" name='Correo' required="">
+            <label for="input" class="label">Correo Electronico</label>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="input" name='Telefono' required="">
+            <label for="input" class="label">Telefono Personal</label>
+            <div class="underline"></div>
+          </div>
+          <div class="container-combobox" style='left:0;'>
+            <select class="form-select" id='combobox' name='Carrera' required="">
+                <option selected>Seleccione su Carrera</option>
+              {%for carrera in carreras%}
+              <option value="{{carrera[0]}}">{{carrera[1]}}</option>
+              {%endfor%}
+          </select>
+        <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
+            <option selected>Seleccione su Año Lectivo</option>
+         {%for Año in Años%}
+         <option value="{{Año[0]}}">{{Año[1]}}</option>
+         {%endfor%}
+     </select>
+     
+          </div>
+         <div class="botom">
+             <button type='submit' onclick='Verificar()' class='btn'>
+               Registrar Alumno
+            </button>
+         </div>
+     </form>
+  </div>
+</div>
+{%endblock%}

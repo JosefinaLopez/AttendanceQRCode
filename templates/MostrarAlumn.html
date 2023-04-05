@@ -1,0 +1,69 @@
+{%extends "layout.html"%}
+{%block main%} 
+<main>
+
+  <div class="container" style='position: relative; left:2%;'>
+   
+      <div class="card-container boder-light" id='card' class='card'>
+        <div class="img-QR">
+          <div class="img-container">
+            <img src="{{Info_Estu[5]}}" style="border-radius: 30px; "target="_blank"  >
+          </div> 
+            <a download='codigo.png' href="/Imagen">
+              <button type='submit' class='btn' style='margin: 5px;'>Descargar</button>
+            </a> 
+        </div>
+        <div class="info-container">
+              <h5>Informacion de Estudiante</h5>
+              <div class="info-xd">
+                <div class="label">Codigo</div>
+                <card-text>{{Info_Estu[0]}}</card-text> 
+              </div>
+              <div class="info-xd">
+                <div class="label">Nombre Estudiante</div>
+                <card-text>{{Info_Estu[1]}}</card-text>
+          
+              </div>
+              <div class="info-xd">
+                <div class="label">Carnet Estudiantil</div>
+                <card-text>{{Info_Estu[2]}}</card-text>
+              
+              </div>
+              <div class="info-xd">
+                <div class="label">Correo</div>
+                <card-text>{{Info_Estu[3]}}</card-text>
+               
+              </div>
+              <div class="info-xd">
+                <div class="label">Telefono</div>
+                <card-text>{{Info_Estu[4]}}</card-text>
+               
+              </div>
+              <div class="info-xd">
+                <div class="label">Carrera</div>
+                <card-text>{{Info_Estu[6]}}</card-text>
+              
+              </div>
+              <div class="info-xd">
+                <div class="label">Departamento</div>
+                <card-text>{{Info_Estu[8]}}</card-text>
+             
+              </div>
+              <div class="info-xd">
+                <div class="label">Facultad</div>
+                <card-text>{{Info_Estu[9]}}</card-text>
+             
+              </div>
+              <div class="info-xd">
+                <div class="label">Año Lectivo</div>    
+                <card-text>{{Info_Estu[11]}}</card-text>
+              
+  
+              </div>
+            </div>
+            
+      </div>
+    </div>
+</main>
+
+{%endblock%}

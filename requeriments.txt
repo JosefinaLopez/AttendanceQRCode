@@ -1,0 +1,8 @@
+qrcode
+flask
+flask_session
+pillow
+pyodbc
+google-cloud-storage==2.7.0
+python-dotenv
+pyrebase4

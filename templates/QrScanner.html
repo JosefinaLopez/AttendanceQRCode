@@ -1,0 +1,110 @@
+{%extends "layout.html"%}
+{%block main%}
+<style type="text/css">
+  body{
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans','Helvetica Neue', sans-serif;
+  /*background-image:linear-gradient(90deg,#A890FE 5%,#5FFAE0 100%);*/
+}
+.card{
+  display: grid;
+  margin-left: 14px;
+  grid-template-rows:67px 149px, 0px;
+  margin-top:2rem;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 24%;
+  height: 80%;
+  box-shadow: 5px 10px 2px 1px rgba(38, 0, 255, 0.2);
+}
+ 
+#card-clases{
+  justify-content: center;
+  height: 11rem;
+  padding: 3%;
+  margin:0;
+}
+.card-content{
+  text-align: center;
+  padding: 0 15px;
+  bottom: 40px;
+}
+.card-content h2{
+  font-size: 22px;
+  color: darkblue;
+}
+.card-content p{
+  color: #626262;
+}
+.scan-container{
+  display: flex;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+  <div class="scan-container">
+    <div class="card border-info mb-3" id='container'>
+    <div class="Reloj">
+      <h2><i class="bi bi-qr-code-scan"></i></h2>  
+      <h2>Hora Actual</h2>
+      <h4 id='clock'></h4> 
+    </div>
+    <div class="card-content">
+      Codigo Estudiante
+      <h2 class="site-backdrop" style='padding:3%;'></h2>
+      <button type="button" class="btn btn-primary" id='offcamara' style="left:4px;"><i class="bi bi-stop-circle-fill"></i> Apagar</button>
+    </div>
+    <br>
+    <div class="card border-info mb-3" style="max-width: 16rem;" id='card-clases'>
+      <div class="card-body">
+        <h3>Estructuras de datos I</h3>
+        <h5 style='color: red;'>Finaliza 3:40 PM</h5>
+        <span><i class="bi bi-people-fill"></i>  0</span>
+      </div>
+    </div>
+    </div>
+    
+    <div class="user-info">
+      <video id="preview" onclick='scanner.start()'></video>
+    </div>
+  </div>
+<script type='text/javascript' src="/static/script/jquery.min.js"></script>
+<script type='text/javascript'  src="/static/script/instascan.min.js"></script>
+<script type='text/javascript'  src='/static/script/clock.js'></script>
+<script type='text/javascript'>
+  var sound = new Audio("/static/barcode.wav")
+  let scanner = new Instascan.Scanner({video:document.getElementById('preview')});
+  var scanneroff = document.getElementById("offcamara");
+  scanner.addListener('scan', function(content)
+  {
+    sound.play();
+    $('.site-backdrop').html(content);
+  });
+  Instascan.Camera.getCameras().then(function(cameras)
+  {
+    if(cameras.length > 0)
+    {
+      scanner.start(cameras[0]);
+    }
+    else
+    {
+       console.error("la camara no funciona")
+    }
+  }).catch(function(e)
+  {
+    console.error(e);
+  });
+
+  scanneroff.onclick = function(cameras)
+  {
+    scanner.stop(cameras[0]);
+  }
+
+</script>
+{%endblock%}

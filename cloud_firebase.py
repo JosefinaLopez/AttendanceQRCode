@@ -2,6 +2,7 @@ import os
 import requests
 import pyrebase
 from io import BytesIO
+import urllib.parse
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -36,12 +37,11 @@ def Link_Img(name_img):
  return url
 
 #Es este
-def Link_Download(img, url):
+def Link_Download(url):
+  #decoded_url = urllib.parse.unquote(url)
+  #print(f"URL: {decoded_url}")
   response = requests.get(url)
-  #with open(f"{img}", "wb") as f:
-   # a = f.write(response.content)
-  #print(type(response.content))
-  #return a
+  print(response)
   img = BytesIO()
   img.write(response.content)
   img.seek(0)

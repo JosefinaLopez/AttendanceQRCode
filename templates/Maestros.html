@@ -1,12 +1,12 @@
 {%extends "layout.html"%}
 {%block main%}
-<div class="container">
+<div class="container" style='margin-top: 2rem;'>
     <div class="card-container boder-light" id='card'>
         <div class="img">
+          <h1>Registro de Maestros</h1>
           <img src="/static/img/maestro.gif" style='max-width: 300px; margin-top:21%;'>
         </div>
         <form action="/RegistroDocentes" method="post">
-        <h5>Registro de Maestros</h5>
              <div class="input-container">
                  <input type="text" id="input" name='Nombre' required="">
                  <label for="input" class="label">Nombre Docente</label>
@@ -22,22 +22,24 @@
                 <label for="input" class="label">Telefono Personal</label>
                 <div class="underline"></div>
               </div>
-              <div class="container-combobox">
-                <select class="form-select" id='combobox' style='width: 120%;' name='Departamento' required="">
+             
+                <select class="form-select" id='combobox' style='max-width: 80%; position: relative;
+                left: 2rem; ' name='Departamento' required="">
                     <option selected>Seleccione su Departamento</option>
                   {%for de in dep%}
                   <option value="{{de[0]}}">{{de[1]}}</option>
                   {%endfor%}
               </select>
-              <select class="form-select" id='combobox' style='width: 120%;' name='Clase' required="">
+              <select class="form-select" id='combobox' style='max-width: 80%; position: relative;
+              left: 2rem; ' name='Clase' required="">
                   <option selected>Seleccione la clase</option>
                 {%for clases in clases%}
                 <option value="{{clases[0]}}">{{clases[1]}}</option>
                 {%endfor%}
             </select>
-              </div>
+            
              <div class="botom">
-                 <button type='submit' onclick='Verificar()' class='btn'>
+                 <button type='submit' id='btn' class='btn'>
                    Registrar Maestro
                 </button>
              </div>

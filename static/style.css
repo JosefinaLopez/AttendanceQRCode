@@ -106,16 +106,18 @@ a ,h1{
   background-color: white;
   border: 1px solid #000;
   padding:  .25rem;
-  border-radius: .5rem;
+  border-radius: 30px;
   overflow: hidden;
 }
 
 .search-input {
   border: none;
   outline: transparent;
-  padding: 0;
+  padding: 2px;
 }
-
+#owo[open]{
+  background-color: #212529;
+}
 /* #endregion */
 
 .container-table{
@@ -129,7 +131,8 @@ a ,h1{
 }
 .hora{
   display:flex; margin:3%; left:8rem;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 30px;
 }
 #card , #info{
 
@@ -176,8 +179,9 @@ a ,h1{
   justify-content: center;
 }
 #combobox{
-  max-width: 100%;
+  max-width: 70%;
   margin-bottom: 5%;
+  border-radius: 30px;
 }
 /*Input del formulario para escribir*/
 .input-container {
@@ -228,7 +232,7 @@ a ,h1{
     transform: scaleX(1);
   }
   /*Boton*/
-  .btn {
+  #btn {
   
     left: 25%;
     padding: 0.5em 1.9em;
@@ -241,11 +245,11 @@ a ,h1{
     z-index: 1;
    }
    
-   .btn:hover {
+   #btn:hover {
     color: rgb(255, 255, 255);
    }
    
-   .btn::before,.btn::after {
+   #btn::before,#btn::after {
     content: "";
     border-radius: 10px;
     position: absolute;
@@ -259,17 +263,17 @@ a ,h1{
     transition: all 0.4s;
    }
    
-   .btn::after {
+   #btn::after {
     z-index: -2;
     transition: all 0.4s;
    }
    
-   .btn:hover::before {
+   #btn:hover::before {
     background: rgb(0, 0, 0, 0.315);
     border-radius: 10px;
    }
    
-   .btn:hover::after {
+   #btn:hover::after {
     background: linear-gradient(to right, #cb6ce6, #38b6ff);
     border-radius: 10px;
     transform: scale(1.07, 1.2) rotateX(180deg);
@@ -353,7 +357,7 @@ a ,h1{
     transition: all 400ms ease;
     padding: 3%;
     display: grid;
-    border-radius: 30px;
+    border-radius: 15px;
     grid-template-columns:300px 400px;
     gap: 15px;
      
@@ -365,6 +369,23 @@ a ,h1{
    color: blue;
   
   }
+  /*Parte del login y register*/
+  .container-register, .container-login{
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+    color: rgb(2, 2, 2);
+}
+#input-login{
+    border-radius: 30px;
+    background-color: white;
+    width: 300px;
+    margin: 14px;
+    padding: 10px;
+    left: 18px;
+    position: relative;
+}
+
   @keyframes scan {
     0% {
       transform: translate(-50%, -50%);

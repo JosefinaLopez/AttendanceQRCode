@@ -1,50 +1,132 @@
 {%extends "layout.html"%}
 {%block main%}
-<div class="container" style='margin-top: 2rem;'>
-    <div class="card-container boder-light" id='card'>
-        <div class="img">
-          <h1>Registro de Maestros</h1>
-          <img src="/static/img/maestro.gif" style='max-width: 300px; margin-top:21%;'>
+
+<main>
+  <div class="result-container">
+    <div class="container-card">
+        {%if query == 1%}
+       <div class="card-resul">
+       <div class="image">
+         <img src="{{Info[4]}}" alt="Código QR" id="uwu">
+         <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
+       </div>
+       <div class="info-containere">
+         <ul class="info">
+           <li>
+             <h5>Teacher Name</h5>
+             <span><h4>{{Info[1]}}</h4></span>
+           </li>
+           <li> 
+            <h5>Class to be Taught</h5>
+            <span><h4>{{Info[5]}}</h4></span>
+          </li>
+           <li>
+             <h5>Departament</h5>
+             <span><h4>{{Info[6]}}</h4></span>
+           </li>
+         </ul>
+         <ul class="info xd">
+          <li>
+          <h5>Phone</h5>
+          <span><h4>{{Info[3]}}</h4></span>
+          </li>
+          <li>
+          <h5>E-Mail</h5>
+          <span><h4>{{Info[2]}}</h4></span>
+          </li>
+          <div class="lef">
+          <a href="#">Edit</a>        
+          <a href="#" style='background-color: red;'>Delete</a>
+          </div>
+         </ul>
+       </div>
+       <span class="carnet">{{Info[0]}}</span>
+       </div>
+       {%else%}
+       {%for Info in Info%}
+       <div class="card-resul">
+        <div class="image">
+          <img src="{{Info[4]}}" alt="Código QR" id="uwu">
+          <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
         </div>
-        <form action="/RegistroDocentes" method="post">
-             <div class="input-container">
-                 <input type="text" id="input" name='Nombre' required="">
-                 <label for="input" class="label">Nombre Docente</label>
-                 <div class="underline"></div>
-               </div>
-              <div class="input-container">
-                <input type="text" id="input" name='Correo' required="">
-                <label for="input" class="label">Correo Electronico</label>
-                <div class="underline"></div>
-              </div>
-              <div class="input-container">
-                <input type="text" id="input" name='Telefono' required="">
-                <label for="input" class="label">Telefono Personal</label>
-                <div class="underline"></div>
-              </div>
-             
-                <select class="form-select" id='combobox' style='max-width: 80%; position: relative;
-                left: 2rem; ' name='Departamento' required="">
-                    <option selected>Seleccione su Departamento</option>
-                  {%for de in dep%}
-                  <option value="{{de[0]}}">{{de[1]}}</option>
-                  {%endfor%}
-              </select>
-              <select class="form-select" id='combobox' style='max-width: 80%; position: relative;
-              left: 2rem; ' name='Clase' required="">
-                  <option selected>Seleccione la clase</option>
-                {%for clases in clases%}
-                <option value="{{clases[0]}}">{{clases[1]}}</option>
+        <div class="info-containere">
+          <ul class="info">
+            <li>
+              <h5>Teacher Name</h5>
+              <span><h4>{{Info[1]}}</h4></span>
+            </li>
+            <li>
+              <h5>Class to be Taught</h5>
+              <span><h4>{{Info[5]}}</h4></span>
+            </li>
+            <li> 
+              <h5>Departament</h5>
+              <span><h4>{{Info[6]}}</h4></span>
+            </li>
+          </ul>
+          <ul class="info xd">
+           <li>
+           <h5>Phone</h5>
+           <span><h4>{{Info[3]}}</h4></span>
+           </li>
+           <li>
+           <h5>E-Mail</h5>
+           <span><h4>{{Info[2]}}</h4></span>
+           </li>
+           <div class="lef">
+           <a href="#">Edit</a>        
+           <a href="#" style='background-color: red;'>Delete</a>
+           </div>
+          </ul>
+        </div>
+        <span class="carnet">{{Info[0]}}</span>
+        </div>
+        {%endfor%}
+       {%endif%}
+     </div>
+     <div class="optionsuwu">
+      <h1>Teacher Registration</h1>
+      <form action="/RegistroDocentes" method="post">
+          <div class="container-stu">
+            <div class="xd">
+              <input type="text" class="input" name='Nombre' placeholder='Name' required="">
+            </div>
+            <div class="xd">
+              <input type="text" class="input" name='Correo' placeholder='E-mail' required="">
+            </div>
+            <div class="xd">
+              <input type="text" class="input" name='Telefono' placeholder='Phone' required="">
+            </div>
+            
+            <div class="combo">
+              <select class="form-select" id='combobox' name='Departamento' required="">
+                  <option selected>Select your department</option>
+                {%for dep in dep%}
+                <option value="{{dep[0]}}">{{dep[1]}}</option>
                 {%endfor%}
             </select>
-            
-             <div class="botom">
-                 <button type='submit' id='btn' class='btn'>
-                   Registrar Maestro
-                </button>
+            </div>
+             <div class="combo">
+               <select class="form-select" id='combobox' style='width: 55%;' name='Clase' required="">
+                <option selected>Select the class to teach</option>
+                 {%for clase in clases%}
+                 <option value="{{clase[0]}}">{{clase[1]}}</option>
+                 {%endfor%}
+                </select>
              </div>
-         </form>
-      </div>
-    </div>
-</div>
+      
+            <div class="botom" style='position: relative; left:-5%;'>
+             <button type='submit'class='btn' id='btn'>
+               Registrar Docente
+            </button>
+            </div>
+
+        </div>
+    </form>
+     </div>
+  </div>
+  
+</main>
+<body>
+
 {%endblock%}

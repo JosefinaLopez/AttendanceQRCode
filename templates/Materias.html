@@ -2,64 +2,71 @@
 {%block main%}
 <main>
   <div class="container">
-      <div class="card-container boder-light" style='grid-template-columns: 296px 480px;'>
-          <div class="img">
-            <img src="/static/img/libros.gif" style='max-width: 300px; margin-top:21%;'>
+      <div class="card-container boder-light" style='grid-template-columns: 400px 523px;'>
+          <div class="img" style='overflow-x: auto;'>
+            <div class="card-view">
+              <div class="title" style='display: flex; gap: 10px;' >
+                <span><h5>#</h5></span> <span><h5>Materia</h5></span><span><h5>Dias</h5></span><span><h5>HoraInicio</h5></span><span><h5>HoraFinal</h5></span><span><h5>Lugar</h5></span>
+              </div>
+              <hr>
+              <div class="contenido">
+                
+              </div>
+           
+            </div>
           </div>
           <form action="/RegistroClases" method="post">
-            <h1>Registro de Clases</h1>
-               <div class="input-container">
-                   <input type="text" id="input" name='Nombre' required="">
-                   <label for="input" class="label">Nombre Materia</label>
-                   <div class="underline"></div>
+            <h1>Class Registration</h1>
+               <div class="xd" style='margin:0 auto; width: 300px;'>
+                   <input type="text" class="input" name='Nombre' style='width:320px;' required="">
                  </div>
                  
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Lunes">
-                    <label class="form-check-label" for="inlineCheckbox1">Lunes</label>
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Monday">
+                    <label class="form-check-label" for="inlineCheckbox1">Monday</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name='Dias' value="Martes">
-                    <label class="form-check-label" for="inlineCheckbox2">Martes</label>
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name='Dias' value="Tuesday">
+                    <label class="form-check-label" for="inlineCheckbox2">Tuesday</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias'  value="Miercoles">
-                    <label class="form-check-label" for="inlineCheckbox1">Miercoles</label>
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias'  value="Wednesday">
+                    <label class="form-check-label" for="inlineCheckbox1">Wednesday</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="Dias" value="Jueves">
-                    <label class="form-check-label" for="inlineCheckbox2">Jueves</label>
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="Dias" value="Thursday">
+                    <label class="form-check-label" for="inlineCheckbox2">Thursday</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Viernes">
-                    <label class="form-check-label" for="inlineCheckbox1">Viernes</label>
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Friday">
+                    <label class="form-check-label" for="inlineCheckbox1">Friday</label>
                   </div>
                  
                  <div class="hora">
                      <div class="horaInicio">
-                         <label for="">Hora Inicio</label>
+                         <label for="">Start Time</label>
                          <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;">   
                       </div>
                       <div class="horafinal">
-                          <label for="">Hora Final</label>
+                          <label for="">Final Time</label>
                           <input type="time" name='HoraFinal'style="border-radius: 30px;text-align: end;" >
                      </div>
                  </div>
                  <select class="form-select" id='combobox' name='Carrera_Id' style='position: relative; left:4rem' required="">
-                     <option selected>Seleccione una Carrera</option>
+                     <option selected>Select a career</option>
                    {%for carrera in carreras%}
                    <option value="{{carrera[0]}}">{{carrera[1]}}</option>
                    {%endfor%}
                </select>
            <select class="form-select" id='combobox'  name='Lugar_Id'style='position: relative; left:4rem'  required="">
-             <option selected>Seleccione la Ubicacion</option>
+             <option selected>Select a location</option>
               {%for lugar in lugares%}
               <option value="{{lugar[0]}}">{{lugar[1]}}</option>
               {%endfor%}
             </select>
                <div class="botom">
                    <button type='submit' id='btn' class='btn'>
-                     Registrar Clase
+                    Class Registration
                   </button>
                </div>
            </form>

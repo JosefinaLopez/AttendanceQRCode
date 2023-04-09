@@ -1,4 +1,4 @@
-
+from datetime import datetime, today, weekday
 import pyodbc
 import base64
 
@@ -16,4 +16,9 @@ def ViewPhoto(Varbinary):
 def ConvertVarbinary(byte):
   uwu = pyodbc.Binary(byte)
   return uwu;
+
+def Fecha(dia):
+  fecha_actual = datetime.today()
+  dia_semana = fecha_actual.weekday()
+  dias_semana_list = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']
 

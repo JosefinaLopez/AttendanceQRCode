@@ -1,0 +1,386 @@
+{%extends "layout.html"%}
+{%block main%}
+
+<style>
+    .parent {
+        margin-top: 0px;
+        display: grid;
+        place-content: center;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        grid-column-gap: 6px;
+        grid-row-gap: 10px;
+        padding: 10px;
+        }
+        
+        .div1, .div2,.div3,.div4, .div5,.div6{
+            border-radius: 30px;
+            background-color: whitesmoke;
+        }
+
+        .div1 { grid-area: 1 / 1 / 2 / 2; }
+        .div2 { grid-area: 1 / 2 / 2 / 3; }
+        .div3 { grid-area: 1 / 3 / 2 / 4; }
+        .div4 { grid-area: 2 / 1 / 3 / 2; }
+        .div5 { grid-area: 2 / 2 / 3 / 3; }
+        .div6 { grid-area: 2 / 3 / 3 / 4; }
+
+ 
+</style>
+<div class="parent"> 
+    <div class="div1">
+        <div class="register">
+            <h1>Registro de Departamentos</h1>
+            <form action="/AgregarDepartamentoAcademico" method="post">
+              <div class="agregar">
+                <div class="xd">
+                  <input type="text" class="input" name='Departamento' placeholder='Departamento' required="">
+                </div>
+                <div class="combo">
+                  <select class="form-select" id='combobox' style='width: 55%;' name='facultad' required="">
+                   <option selected>Seleccione su Año Lectivo</option>
+                    {%for facu in facultades%}
+                    <option value="{{facu[0]}}">{{facu[1]}}</option>
+                    {%endfor%}
+                   </select>
+                </div>
+                <div class="botom">
+                    <span>
+                        <button type='submit'class='btn btn-primary'>
+                          Registrar
+                       </button>
+                    </span>
+                    <span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Mostrar
+                        </button>
+                    </span>
+                 <!-- Button trigger modal -->
+                 </div>
+                 
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Registros de Departamentos Educativos</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mostrar" style='overflow-x: auto;' >
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Departamento</th>
+                                        <th scope="col">Facultad</th>
+                                        <th scope="col">Editar</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        {%for dept in depar%}
+                                        <th scope="row">{{dept[0]}}</th>
+                                        <td>{{dept[1]}}</td>
+                                         <td>{{dept[2]}}</td>
+                                        <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                          <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                        </svg>
+                                        </td>
+                                        {%endfor%}
+                                      </tr>
+                                    </tbody>
+                                </table>
+                               </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              </div>
+            </form>
+           </div>
+    </div>
+    <div class="div2">
+        <div class="register">
+            <h1>Registro de Carreras</h1>
+            <form action="/AgregarCarrera" method="post">
+              <div class="container-stu">
+                <div class="xd">
+                  <input type="text" class="input" name='Carrera' placeholder='Carrera' required="">
+                </div>
+                <div class="combo">
+                  <select class="form-select" id='combobox' style='width: 55%;' name='Departamento' required="">
+                   <option selected>Seleccione su Año Lectivo</option>
+                    {%for dep in departamentos%}
+                    <option value="{{dep[0]}}">{{dep[1]}}</option>
+                    {%endfor%}
+                   </select>
+                </div>
+                <div class="botom">
+                  <span>
+                      <button type='submit'class='btn btn-primary'>
+                        Registrar
+                     </button>
+                  </span>
+                  <span>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                          Mostrar ca
+                      </button>
+                  </span>
+               <!-- Button trigger modal -->
+               </div>
+              </div>
+               <!-- Modal -->
+               <div class="modal fade2" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registros de Carreras</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mostrar" style='overflow-x: auto;' >
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Carrera</th>
+                                    <th scope="col">Departamento</th>
+                                    <th scope="col">Editar</th>
+                                    <th scope='col'>Eliminar</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    {%for car in carreras%}
+                                    <th scope="row">{{car[0]}}</th>
+                                    <td>{{card[1]}}</td>
+                                    <td>{{card[2]}}</td>
+                                    <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                      <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                    </svg> a</td>
+                                    <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                      </svg> 
+                                    </td>
+                                    {%endfor%}
+                                  </tr>
+                                </tbody>
+                            </table>
+                           </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </form>
+          </div>
+
+    </div>
+    <div class="div3">
+        <h1>GRID DE RESHENO XD</h1>
+    </div>
+    <div class="div4">
+        <div class="register">
+            <h1>Registro de Facultades</h1>
+            <form action="/AgregarFacultad" method="post">
+              <div class="container-stu">
+                <div class="xd">
+                  <input type="text" class="input" name='NombreFacultad' placeholder='Nombre Facultad' required="">
+                </div>
+                </div>
+                <div class="botom">
+                    <span>
+                        <button type='submit'class='btn btn-primary'>
+                          Registrar
+                       </button>
+                    </span>
+                    <span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                            Mostrar ca
+                        </button>
+                    </span>
+                 <!-- Button trigger modal -->
+                 </div>
+                   <!-- Modal -->
+               <div class="modal fade2" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registros de Carreras</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mostrar" style='overflow-x: auto;' >
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Facultad</th>
+                                    <th scope="col">Editar</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    {%for facu in facultades%}
+                                    <th scope="row">{{facu[0]}}</th>
+                                    <td>{{facu[1]}}</td>
+                                    <td>Icono</td>
+                                    {%endfor%}
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>        
+                </form>
+              </div>
+
+    </div>
+    <div class="div5">
+        <div class="register">
+            <h1>Registro de Ubicaciones
+            </h1>
+            <form action="/AgregarLugarMateria" method="post">
+              <div class="container-stu">
+                <div class="xd">
+                  <input type="text" class="input" name='Lugar' placeholder='Escriba el Lugar' required="">
+                </div>
+                <div class="botom">
+                    <span>
+                        <button type='submit'class='btn btn-primary'>
+                          Registrar
+                       </button>
+                    </span>
+                    <span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal4">
+                            Mostrar ca
+                        </button>
+                    </span>
+                 <!-- Button trigger modal -->
+                 </div>
+              </div>
+                     <!-- Modal -->
+               <div class="modal fade2" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registros de Lugares</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mostrar"style='overflow-x: auto;' >
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Lugar</th>
+                                    <th scope="col">Editar</th>
+                                    <th scope='col'>Eliminar</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    {%for lugar in lugares%}
+                                    <th scope="row">{{lugar[0]}}</th>
+                                    <td>{{lugar[1]}}</td>
+                                    <td>Icono</td>
+                                    <th>Icono</th>
+                                    {%endfor%}
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>  
+            </form>
+          </div>
+    </div>
+    <div class="div6">
+        <div class="register">
+            <h1>Registro de Años Lectivos</h1>
+            <form action="/AgregarAnio" method="post">
+              <div class="container-stu">
+                <div class="xd">
+                  <input type="text" class="input" name='Anio' placeholder='Año' required="">
+                </div>
+                <div class="botom">
+                    <span>
+                        <button type='submit'class='btn btn-primary'>
+                          Registrar
+                       </button>
+                    </span>
+                    <span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5">
+                            Mostrar ca
+                        </button>
+                    </span>
+                 <!-- Button trigger modal -->
+                 </div>
+              </div>
+                 <!-- Modal -->
+                 <div class="modal fade2" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Registros de Años Lectivos</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mostrar"style='overflow-x: auto;' >
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Editar</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        {%for an in ani%}
+                                        <th scope="row">{{an[0]}}</th>
+                                        <td>{{an[1]}}</td>
+                                        <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                          <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                        </svg>
+                                       </td>
+                                       {%endfor%}
+                                      </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+ 
+
+
+            </form>
+       </div>
+
+    </div>
+    </div>
+{%endblock%}

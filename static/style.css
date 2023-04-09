@@ -3,6 +3,97 @@ body{
   background-color: #86b7fe;
 }
 
+
+.container-stu{
+  width: 290px;
+  margin: 0 auto;
+}
+/*Esto estaba en result.html*/
+.card-resul{
+  margin: 22px;
+  width: 740px;
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.15);
+  display: grid;
+  grid-template-columns: 117px 505px;
+  gap: 1rem;
+  padding: .4rem 2rem;
+  position: relative;
+}
+.card-resul h5{
+color: #0099ff;
+font-size: medium;
+}
+.card-resul h4{
+font-size: medium;
+}
+
+.image {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image a ,.lef a {
+  display: inline-block;
+  padding: .25rem .5rem;
+  background-color: #0099ff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: .5rem;
+}
+
+.info {
+  list-style: none;
+  display: flex;
+  gap: .7rem;
+  padding-left: 0;
+}
+
+.info:nth-child(1) { /* El primer elemento con la clase .info */
+  border-bottom: 1px solid #000;
+  /*padding-bottom: 0.1rem;*/
+}
+.carnet {
+  font-weight: bold;
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  color: #0018a0;
+}
+#uwu{
+  width: 130px;
+  height: 130px;
+  border-radius: 10px;
+}
+.lef{
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+}
+.info-container{
+  margin-top: 35px;
+}
+.container-card{
+  overflow-y: auto;
+  max-width: 850px;
+  max-height: 570px;
+}
+.result-container{
+  display: grid;
+  grid-template-columns: 850px 100px;
+}
+.optionsuwu{
+  width: 355px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  height: 35rem;
+  position: relative;
+  right: 75px;
+  top: 1px;
+}
+/*FIN*/
 /*Estilos Layout*/
 .container-sidebar {
   margin: 0;
@@ -74,13 +165,8 @@ a ,h1{
 
 /* #region header */
 .header-page {
-  background-color: #212529;;
-  border-bottom: 1px solid #000;
+  background-color: #86b7fe;
   padding: 0 .7rem; /* 1 REM === 16PX */
-}
-
-.header-page {
-  background-color:#212529;;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,70 +257,40 @@ a ,h1{
   box-shadow: 0px 9px 33px 4px rgba(21,29,235,0.83);
 
 }
-/*Combobox xd*/
-.container-combobox{
-  display: flex;
-  padding: 5px;
-  max-width: 100%;
-  justify-content: center;
-}
 #combobox{
-  max-width: 70%;
+  max-width: 80%;
   margin-bottom: 5%;
   border-radius: 30px;
 }
-/*Input del formulario para escribir*/
-.input-container {
-    position: relative;
-    margin: 40px auto;
-    width: 340px;
-  }
-  
-  .input-container input[type="text"] {
-    font-size: 20px;
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    padding: 5px 0;
-    background-color: transparent;
-    outline: none;
-  }
-  
-  .input-container .label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: #ccc;
-    transition: all 0.3s ease;
-    pointer-events: none;
-  }
-  
-  .input-container input[type="text"]:focus ~ .label,
-  .input-container input[type="text"]:valid ~ .label {
-    top: -20px;
-    font-size: 16px;
-    color: #0004ff;
-  }
-  
-  .input-container .underline {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: #4400ff;
-    transform: scaleX(0);
-    transition: all 0.3s ease;
-  }
-  
-  .input-container input[type="text"]:focus ~ .underline,
-  .input-container input[type="text"]:valid ~ .underline {
-    transform: scaleX(1);
-  }
+.combo ,.xd, .botom{
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+/*New Input xd*/
+.input {
+  border: none;
+  margin: 4px;
+  outline: none;
+  border-radius: 30px;
+  padding: 10px;
+  width: 270px;
+  background-color: #ccc;
+  box-shadow: inset 2px 5px 10px rgba(0,0,0,0.3);
+  transition: 300ms ease-in-out;
+}
+
+.input:focus {
+  background-color: white;
+  transform: scale(1.05);
+  box-shadow: 13px 13px 100px #969696,
+             -13px -13px 100px #ffffff;
+}
   /*Boton*/
   #btn {
   
-    left: 25%;
+   
     padding: 0.5em 1.9em;
     font-size: 16px;
     border: none;

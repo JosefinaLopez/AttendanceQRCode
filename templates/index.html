@@ -1,4 +1,33 @@
 {%extends "layout.html"%}
 {%block main%}
-
+<style>
+    .container-index{
+        margin: 0 auto;
+        width: 800px;
+        text-align: center;
+        margin-top: 10rem;
+        font-style: italic; 
+    }
+    h3,h4{
+        color:#212529 ;
+    }
+    #hr{
+        color:#212529 ;
+        width: 135px;
+        position: relative;
+        left: 21rem;
+    }
+</style>
+<div class="container-index">
+    <div class="reloj">
+        <form action="/" method="get">
+            <h1 style='color:#212529;' id='clock'></h1>
+        </form>
+    </div>
+     <hr id='hr'>
+     <h4>Termina a las {{finales}}</h4>
+    <h3>{{clases}}</h3>
+</div>
+<script src='/static/script/jquery.min.js'></script>
+    <script src="/static/script/clock.js"></script>
 {%endblock%}     

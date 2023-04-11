@@ -32,7 +32,7 @@
             <span><h4>{{Info[7]}}</h4></span>
           </li>
           <li>
-          </h5>Phone</h5>
+          <h5>Phone</h5>
           <span><h4>{{Info[4]}}</h4></span>
           </li>
           <li>
@@ -40,8 +40,8 @@
           <span><h4>{{Info[3]}}</h4></span>
           </li>
           <div class="lef">
-          <a href="#">Edit</a>        
-          <a href="#" style='background-color: red;'>Delete</a>
+          <a href="#">Edit</a>      
+          <a href="/EliminarAlumno/{{Info[0]}}" style='background-color: red;'>Delete</a>
           </div>
          </ul>
        </div>
@@ -84,8 +84,8 @@
            <span><h4>{{Info[3]}}</h4></span>
            </li>
            <div class="lef">
-           <a href="#">Edit</a>        
-           <a href="#" style='background-color: red;'>Delete</a>
+           <a href="/EditarAlumno/{{Info[0]}}">Edit</a>        
+           <a href="/EliminarAlumno/{{Info[0]}}" style='background-color: red;'>Delete</a>
            </div>
           </ul>
         </div>
@@ -99,23 +99,23 @@
       <form action="/RegistroAlumno" method="post">
           <div class="container-stu">
             <div class="xd">
-              <input type="text" class="input" name='Nombre' placeholder='Nombre' required="">
+              <input type="text" class="input" name='Nombre' value="{{edit[2] if edit else ''}}" placeholder='Nombre' required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Carnet' placeholder='Carnet' required="">
+              <input type="text" class="input" name='Carnet' value="{{edit[3] if edit else ''}}" placeholder='Carnet' required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Correo' placeholder='Correo' required="">
+              <input type="text" class="input" name='Correo' value="{{edit[4] if edit else ''}}" placeholder='Correo' required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Telefono' placeholder='Telefono' required="">
+              <input type="text" class="input" name='Telefono' value="{{edit[5] if edit else ''}}" placeholder='Telefono' required="">
             </div>
             
             <div class="combo">
               <select class="form-select" id='combobox' name='Carrera' required="">
-                  <option selected>Selecting a career</option>
+                  <option selected value=''>Selecting a career</option>
                 {%for carr in carreras%}
-                <option value="{{carr[0]}}">{{carr[1]}}</option>
+                <option value="{{carr[0]}}" {%if edit and edit[7] == carr[0]%}selected{%endif%}>{{carr[1]}}</option>
                 {%endfor%}
             </select>
             </div>
@@ -123,14 +123,14 @@
                <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
                 <option selected>Select a academic year</option>
                  {%for Año in Años%}
-                 <option value="{{Año[0]}}">{{Año[1]}}</option>
+                 <option value="{{Año[0]}}" {%if edit and edit[8] == Año[0]%}selected{%endif%}>{{Año[1]}}</option>
                  {%endfor%}
                 </select>
              </div>
-      
-            <div class="botom" style='position: relative; left:-5%;'>
+             <div class="botom">
+              <input type="hidden" name="Codigo" value="{{ edit[1] if edit else '' }}">
              <button type='submit'class='btn' id='btn'>
-              Student Registration
+             {{'Update' if edit else 'Register'}}
             </button>
             </div>
 

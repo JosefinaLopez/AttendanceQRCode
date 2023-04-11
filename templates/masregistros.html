@@ -1,0 +1,82 @@
+{%extends "layout.html"%}
+{%block main%}
+<div class="container-carrera">
+    <div class="register">
+        <h1>Registro de Carreras</h1>
+        <form action="/AgregarCarrera" method="post">
+          <div class="container-stu">
+            <div class="xd">
+              <input type="text" class="input" name='Carrera' placeholder='Carrera' required="">
+            </div>
+            <div class="combo">
+              <select class="form-select" id='combobox' style='width: 55%;' name='Departamento' required="">
+               <option selected>Seleccione su Año Lectivo</option>
+                {%for dep in departamentos%}
+                <option value="{{dep[0]}}">{{dep[1]}}</option>
+                {%endfor%}
+               </select>
+            </div>
+                <div class="botom">
+                  <button type='submit'class='btn btn-primary'>
+                    Registrar
+                  </button>  
+                </div>
+          </div>
+       </form>
+    </div>  
+</div>  
+
+<div class="container-ubiclase">
+    <div class="register">
+        <h1>Registro de Ubicaciones
+        </h1>
+        <form action="/AgregarLugarMateria" method="post">
+          <div class="container-stu">
+            <div class="xd">
+              <input type="text" class="input" name='Lugar' placeholder='Escriba el Lugar' required="">
+            </div>
+            <div class="botom">
+                    <button type='submit'class='btn btn-primary'>
+                      Registrar
+                   </button>
+             </div>
+          </div>
+         </form>
+    </div>
+</div>
+
+<div class="container-Asignacion">
+  <div class="register">
+    <h1>Registro de Asignaciones 
+    </h1>
+    <form action="/Asignar" method="post">
+      <div class="container-stu">
+        <div class="combo">
+          <select class="form-select" id='combobox' style='width: 55%;' name='Clase' required="">
+           <option selected>Select the teach</option>
+            {%for maestro in maestros%}
+            <option value="{{maestro[0]}}">{{maestro[1]}}</option>
+            {%endfor%}
+           </select>
+        </div>
+ 
+        <div class="combo">
+          <select class="form-select" id='combobox' style='width: 55%;' name='Clase' required="">
+           <option selected>Select the class to teach</option>
+            {%for clase in clases%}
+            <option value="{{clase[0]}}">{{clase[1]}}</option>
+            {%endfor%}
+           </select>
+        </div>
+ 
+        <div class="botom">
+                <button type='submit'class='btn btn-primary'>
+                  Registrar
+               </button>
+         </div>
+      </div>
+     </form>
+</div>
+</div>
+
+{%endblock%}

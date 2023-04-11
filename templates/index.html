@@ -1,18 +1,19 @@
-{%extends "layout.html"%}
-{%block main%}
+{% extends "layout.html" %}
+
+{% block main %}
 <style>
-    .container-index{
+    .container-index {
         margin: 0 auto;
         width: 800px;
         text-align: center;
         margin-top: 10rem;
         font-style: italic; 
     }
-    h3,h4{
-        color:#212529 ;
+    h3, h4 {
+        color: #212529;
     }
-    #hr{
-        color:#212529 ;
+    #hr {
+        color: #212529;
         width: 135px;
         position: relative;
         left: 21rem;
@@ -24,10 +25,16 @@
             <h1 style='color:#212529;' id='clock'></h1>
         </form>
     </div>
-     <hr id='hr'>
-     <h4>Termina a las {{finales}}</h4>
-    <h3>{{clases}}</h3>
+    <hr id='hr'>    
+
+    {% for clase in clase_actual %}
+    <h4>Termina a las {{ clase[1] }}</h4>
+    <h3>{{ clase[0]}}</h3>
+    {% endfor %}
+
+    <h1>Variable de Prueba : {{uwu}}</h1>
 </div>
 <script src='/static/script/jquery.min.js'></script>
-    <script src="/static/script/clock.js"></script>
-{%endblock%}     
+<script src="/static/script/clock.js"></script>
+{% endblock %}
+

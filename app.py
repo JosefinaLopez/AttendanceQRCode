@@ -1,8 +1,8 @@
 from os import remove
-from flask import Flask, render_template, redirect, session, request, flash, send_file
+from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
-import datetime
+from view import mostrar
 from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
@@ -17,55 +17,32 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-        
- #Principal       
 @app.route('/', methods=["GET"])
 def index():
-    cursor = db.cursor()
-    
-    fecha_actual = datetime.datetime.today()
-     
+    #Hora que se manda de el js clock cada 1 min xd
     hora_actual = request.args.get('time', '')
-     
-    dias = cursor.execute("EXEC usp_DiasClases ?",(hora_actual)).fetchall()
-    print(dias)
-    print(len(dias))
+    hora = str(hora_actual)
+
+    owo, xdd = mostrar(hora_actual)
+
+    cursor = db.cursor()
+
+    h = '19:56'
+    print(hora_actual)
+    xd = cursor.execute("SELECT NombreMateria FROM Materia WHERE HoraInicio = ?",(h)).fetchone()
+    cursor.close()
+    print(owo, xdd)
    
-    if dias is None:
-        print("No hay nada")
-
-    else: 
-        dias_clase = []
-        for row in dias:
-            dias_clase.append(row[1])       
-            #print(row)   
-    #N/T: Se obtiene las variables y todo, pero no puedo enviarlas al template aunque este bien la funcion del if y todo
-        clases = "aaaa"
-        finales = "aaaaaaaa"
-        band = "" 
-        for clase in dias_clase:
-            if clase == fecha_actual.strftime('%A'):
-                clase_actual = cursor.execute("SELECT NombreMateria, HoraFinal FROM Materia WHERE HoraInicio = ?",(hora_actual)).fetchone()
-                clases = clase_actual[0]
-                finales = clase_actual[1]
-                return render_template("index.html", clases = clases, finales = finales)
-            else:
-               flash("El evento y el dia no coinciden")
-    return render_template("index.html")            
- 
-     #for dia in total_dias:
-      #  if dia == fecha_actual.strftime('%A'):
-       #    print("Es hoy")
-        #else:
-     #print(fecha_actual.strftime('%A'))
-          # print("Hoy no es xd")   
-        
-         
+    return render_template("index.html", clase_actual=(str(owo), str(xdd)), uwu=str(xd[0]))
+    
 
 
 
 
-#Region de Registros
+    
+
+
+     
 @app.route("/RegistroAlumno",methods=["GET","POST"])
 def registerA():
 
@@ -82,12 +59,12 @@ def registerA():
    code_id = cursor.execute(comprobar_code).fetchone()[0]
    print(code_id)
 
-   code = 0;
+   code = 0
    if(code_id is None):
      code = 1
      codigo = f"ESTUDI0001"
    else:
-     code = code_id+1;
+     code = code_id+1
    print(code)
 
    #ESTU0001    
@@ -108,6 +85,7 @@ def registerA():
       telefono = request.form.get("Telefono")
       carrera = request.form.get("Carrera")
       año = request.form.get("Año")
+      codigo_update = request.form['Codigo']
       
       #Se crea la imagen de Codigo QR
       qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L)
@@ -121,10 +99,10 @@ def registerA():
       img_QR.save(ruta)
          
       #Que me arroje el primer resultado 
-      verificar = cursor.execute("SELECT *FROM Estudiantes WHERE carnet = ?",(carnet)).fetchone()
+      verificar = cursor.execute("SELECT *FROM Estudiantes WHERE Codigo = ?",(codigo_update)).fetchone()
       print(verificar)
       
-      
+      #Si el registro no existe se agrega, y si, si existe, se edita xd
       if verificar is None:
          #Se envia a Firebase Storage 
          Send_QR(f"{codigo}",ruta)
@@ -139,6 +117,11 @@ def registerA():
          remove(ruta)
          return redirect("/Alumnos")
       else: 
+         cursor.execute("UPDATE Estudiantes SET Nombre = ?, Carnet = ?, Correo = ?, Telefono = ?, Carrera_Id = ?, Año_Lectivo_Id = ? WHERE codigo = ?", (name, carnet, correo, telefono, carrera, año, codigo_update))
+         cursor.commit()
+         cursor.close()
+         print(codigo_update)
+         flash("Los Cambios se realizaron Satisfactoriamente")
          return redirect("/Alumnos")
       
    else:
@@ -193,26 +176,25 @@ def clases():
    img_QR.save(ruta)
 
    if request.method == "POST":
-      verificar = cursor.execute("SELECT NombreDocente FROM Docentes WHERE Correo = ?", (correo)).fetchone()
+      verificar = cursor.execute("SELECT NombreDocente FROM Docentes WHERE Codigo = ?", (codigo)).fetchone()
       if verificar is None:
          #Se envia a Firebase Storage 
          Send_QR(f"{codigo}",ruta)
          #Se obtiene el enlace para poder visualizar la imagen
          img = Link_Img(f"{codigo}")
 
-         cursor.execute("INSERT INTO Docentes (NombreDocente,Correo,Telefono,QR_img,Materia_Id,Departamento_Id) VALUES(?,?,?,?,?,?)",
-                        (nombre,correo,telefono,img,clase,dtp_id))
+         cursor.execute("INSERT INTO Docentes (NombreDocente,Correo,Telefono,QR_img,Departamento_Id) VALUES(?,?,?,?,?)",
+                        (nombre,correo,telefono,img,dtp_id))
          cursor.commit()
          cursor.close()
          remove(ruta)
          flash("Registro existoso")
-         return render_template("Maestros.html", dep = dep, clases = clases)
+         return redirect("/Docentes")
       else: 
          flash("Registro Ya Existe") 
-         return render_template("Maestros.html",dep = dep, clases = clases)       
+         return redirect("/Docentes")       
    else:  
-    return render_template("Maestros.html",dep = dep , clases = clases)
-
+    return redirect("/Docentes")
 
 @app.route('/RegistroClases', methods=["GET", "POST"])
 def maestros():
@@ -250,13 +232,13 @@ def maestros():
 
 @app.route('/MasRegistros')
 def regis():
-   return render_template("prueba.html")
+   return render_template("masregistros.html")
 
 @app.route('/Asistencia', methods=["GET", "POST"])
 def asistencia():
     if request.method=="GET":
        
-     return render_template("QRScanner.html")  
+     return render_template("qrscan.html")  
     
     
 
@@ -278,11 +260,11 @@ def viewA():
    #Verifica si existe o no
    if consulta is None:
       flash("Aun no hay nada aqui xd")
-      return render_template("Alumnos.html", Info = consulta,carreras = rows , Años = row)
+      return render_template("alumnos.html", Info = consulta,carreras = rows , Años = row)
 
    else:
       cursor.close()
-      return render_template("Alumnos.html", Info = consulta, carreras = rows , Años = row)
+      return render_template("alumnos.html", Info = consulta, carreras = rows , Años = row)
 
 @app.route('/Clases',methods=["GET", "POST"])
 def viewClass():
@@ -296,11 +278,11 @@ def viewClass():
    #Verificar si hay registros 
    if len(consulta) == 0:
       flash("Aun no hay registros aqui")
-      return render_template("Materias.html", clases = consulta, carreras = carrera , lugares = lugar)
+      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar)
 
    else:
       cursor.close()   
-      return render_template("Materias.html", clases = consulta, carreras = carrera , lugares = lugar)
+      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar)
 
 
 @app.route('/Docentes',methods=["GET", "POST"])
@@ -314,11 +296,11 @@ def viewDocen():
    
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
-      return render_template("Maestros.html",Info = consulta, dep = dep , clases = clases)
+      return render_template("maestros.html",Info = consulta, dep = dep , clases = clases)
 
    else:
      cursor.close()  
-     return render_template("Maestros.html",Info = consulta, dep = dep , clases = clases)
+     return render_template("maestros.html",Info = consulta, dep = dep , clases = clases)
 
 
 
@@ -326,42 +308,70 @@ def viewDocen():
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
 def rellenoAlumn(codigo):
    cursor = db.cursor()
-   query = cursor.execute("SELECT *FROM Estudiantes WHERE codigo = ?",(codigo)).fetchall()
-   return render_template("Alumnos.html", edit = query)
+   query = "SELECT Id, NombreCarrera FROM Carrera"
+   rows = cursor.execute(query).fetchall()
 
-@app.route('/Update/<string:codigo>')
-def updatealum(codigo):
-    if request.method == "POST":
-      
-      cursor = db.cursor()
+   Año = "SELECT Id, NombreAño FROM Año_Lectivo"
+   row = cursor.execute(Año).fetchall()
+   query = cursor.execute("SELECT *FROM Estudiantes WHERE codigo = ?",(codigo)).fetchone()
+   cursor.close()
+   return redirect (url_for("Alumnos.html",title = "Edit Student", edit = query, carreras = rows , Años = row))
 
-      name = request.form.get("Nombre")
-      carnet = request.form.get("Carnet")
-      correo = request.form.get("Correo")
-      telefono = request.form.get("Telefono")
-      carrera = request.form.get("Carrera")
-      año = request.form.get("Año")
+@app.route('/EditarDocente/<string:codigo>', methods=["GET","POST"])
+def rellenoDocent(codigo):
+   cursor = db.cursor()
+   carrera = cursor.execute("SELECT Id, NombreCarrera FROM Carrera").fetchall()
+   lugar = cursor.execute("SELECT Id, NombreLugarMaterias FROM Lugar_Materias").fetchall()
+   uwu = cursor.execute("SELECT *FROM Docentes WHERE codigo = ?",(codigo)).fetchone()
+   cursor.close()
+   return redirect(url_for("maestros.html",edit = uwu, carreras = carrera , lugares = lugar))
 
-      query = cursor.execute("UPDATE Estudiante"
-                            "SET nombre = ? "
-                            "SET carnet = ?"
-                            "SET correo = ?"
-                            "SET telefono = ?"
-                            "SET carrera = ?"
-                            "WHERE codigo = ?", 
-                            (name,carnet, correo,telefono,carrera,año,codigo))
-      db.commit()
-      flash("Registro Editado Exitosamente")
+@app.route('/EditarClase/<int:id>', methods = ["GET","POST"])
+def rellenoclase(id):
+   cursor = db.cursor()
+   carrera = cursor.execute("SELECT Id, NombreCarrera FROM Carrera").fetchall()
+   lugar = cursor.execute("SELECT Id, NombreLugarMaterias FROM Lugar_Materias").fetchall()
+   owo = cursor.execute("SELECT *FROM Materia WHERE Id = ?",(id)).fetchone()
+   cursor.close()
+   return redirect(url_for("materias.html", edit = owo, carreras = carrera, lugares = lugar))
 
-      return render_template("Alumnos.html")
+@app.route('/EditarCarrera/<int:id>', methods=["GET","POST"])
+def rellenocarrera(id):
+   cursor = db.cursor()
+   dep = "SELECT Id, NombreDepartamento FROM Departamento"
+   row = cursor.execute(dep).fetchall()
+    
+   query = cursor.execute("SELECT *FROM Carrera WHERE Id = ? ", (id)).fetchone()
+   return redirect(url_for("masregistros.html", edit = query , dept = row))
 
+@app.route('/EditarUbicacion/<int:id>', methods=["GET","POST"])
+def rellenoubi(id):
+   cursor = db.cursor()
+   xd = "SELECT *FROM Lugar_Materia"
+   query = cursor.execute(xd).fetchone()
+   cursor.close()
+   return redirect(url_for("masregistros.html",edit2 = query)) 
+
+
+@app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
+def rellenoAsis(id):
+   cursor = db.cursor()
+
+   a = "SELECT Id, Nombre FROM Alumno"
+   alum = cursor.execute(a).fetchall()
+   xd = "SELECT Id, NombreMateria FROM Materia"
+   clas = cursor.execute(xd).fetchall()
+
+   query = cursor.execute("SELECT *FROM  Asistencia WHERE Id = ?",(id)).fetchone()
+   return redirect(url_for("masregistros.html", edit3 = query , alum = alum, clase = clas))
 
 
 #Eliminar Registros
 @app.route('/EliminarAlumno/<string:codigo>')
 def deleteStu(codigo):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Estudiantes WHERE codigo = ?", (codigo))
+   query = cursor.execute("DELETE FROM Estudiantes WHERE codigo = ?", (codigo))
+   cursor.commit()
    flash("Registro eliminado")
    cursor.close()
    return redirect("/Alumnos")
@@ -369,7 +379,8 @@ def deleteStu(codigo):
 @app.route('/EliminarDocente/<string:codigo>')
 def deletedocent(codigo):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Docentes WHERE codigo = ?", (codigo))
+   query = cursor.execute("DELETE FROM Docentes WHERE codigo = ?", (codigo))
+   cursor.commit()
    flash("Registro eliminado")
    cursor.close()
    return redirect('/Docentes')
@@ -377,7 +388,8 @@ def deletedocent(codigo):
 @app.route('/EliminarClase/<int:id>')
 def deleteclas(id):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Materia WHERE id = ?", (id))
+   query = cursor.execute("DELETE FROM Materia WHERE id = ?", (id))
+   cursor.commit()
    cursor.close()
    flash("Registro eliminado")
    return redirect("/Clase")
@@ -385,14 +397,16 @@ def deleteclas(id):
 @app.route('/EliminarAsistencia/<int:id>')
 def deleteAsis(id):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Asistencia WHERE id = ?", (id))
+   query = cursor.execute("DELETE FROM Asistencia WHERE id = ?", (id))
+   cursor.commit()
    flash("Registro eliminado")
    return redirect("QrScanner.html")
 
 @app.route('/EliminarCarrera/<int:id>')
 def deletecar(id):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Carrera WHERE id = ?", (id))
+   query = cursor.execute("DELETE FROM Carrera WHERE id = ?", (id))
+   cursor.commit()
    flash("Registro eliminado")
    cursor.close()
    redirect("RegMenores.html")
@@ -400,7 +414,8 @@ def deletecar(id):
 @app.route('/EliminarLugar/<int:id>')
 def deletelugar(id):
    cursor = db.cursor()
-   query = cursor.execute("DELETE Lucar_Materia WHERE id = ?", (id))
+   query = cursor.execute("DELETE FROM Lucar_Materia WHERE id = ?", (id))
+   cursor.commit()
    flash("Registro eliminado")
    cursor.close()
    redirect("/RegMenores")   

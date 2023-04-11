@@ -7,7 +7,7 @@ function clock() {
     //Aqui divide la hora x 12 y identifica si es AM O PM
     const amp = H >= 12 ? 'PM' :'AM';
     h = H % 12;
-    h = H ? h : 12;
+    h = h ? h : 12;
 
     //En base a eso se crea una cade con el formato 3:30 PM
     var time = h + ':' + (M < 10 ? '0' : '') + M + " " + amp;

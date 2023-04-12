@@ -2,6 +2,7 @@ from os import remove
 from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
+import datetime
 from view import mostrar
 from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
@@ -19,29 +20,33 @@ Session(app)
 
 @app.route('/', methods=["GET"])
 def index():
-    #Hora que se manda de el js clock cada 1 min xd
+    # Hora que se manda desde el reloj JavaScript cada 1 minuto
     hora_actual = request.args.get('time', '')
-    hora = str(hora_actual)
+  
+    dia_actual = datetime.datetime.now().strftime("%A")
 
-    owo, xdd = mostrar(hora_actual)
-
+    # Se llama al procedimiento almacenado para obtener la información de las clases
     cursor = db.cursor()
-
-    h = '19:56'
-    print(hora_actual)
-    xd = cursor.execute("SELECT NombreMateria FROM Materia WHERE HoraInicio = ?",(h)).fetchone()
-    cursor.close()
-    print(owo, xdd)
-   
-    return render_template("index.html", clase_actual=(str(owo), str(xdd)), uwu=str(xd[0]))
+    info = cursor.execute("EXEC usp_FuncionalidadIndex ?", (dia_actual,)).fetchall()
+    print(info)
     
+    clase_actual = None
+    final_actual = None
+    for clase, inicio, final, dia in info:
+      # Do something with the values
+      clase_actual = clase
+      final_actual = final
 
+      print(clase, inicio, final, dia)
 
+    # Se renderiza la plantilla con la información de la clase en curso (si existe)
+    if clase_actual is not None:
+        flash(f"La clase {clase_actual} está en curso")
+        return render_template("index.html", clase=clase_actual, final=final_actual)
+    else:
+        return render_template("index.html", clase="Aún no hay", final="00:00")
 
-
-    
-
-
+             
      
 @app.route("/RegistroAlumno",methods=["GET","POST"])
 def registerA():
@@ -129,17 +134,15 @@ def registerA():
 
 
 @app.route('/RegistroDocentes', methods=["GET", "POST"])
-def clases():
+def docentes():
    cursor = db.cursor()
    dep = cursor.execute("SELECT Id, NombreDepartamento FROM Departamento").fetchall()
-   clases = cursor.execute("SELECT Id, NombreMateria FROM Materia").fetchall()
    #print(dep)
-   print(clases)
    nombre = request.form.get("Nombre")
    correo = request.form.get("Correo")
    telefono = request.form.get("Telefono")
    dtp_id = request.form.get("Departamento")
-   clase = request.form.get("Clase")
+
    
     #Obtiene el ultimo Id Registrado y le suma una 
    comprobar_code = "SELECT MAX(Id) FROM Docentes"
@@ -204,22 +207,19 @@ def maestros():
   
    #Variables
    nombre = request.form.get("Nombre")
-   #Convierte la seleccion en listas
-   fecha = request.form.getlist("Dias")
-   #Las convierte en un str con comas para insertar en la bd
-   dias = ','.join(fecha)
+   dias =  request.form.get("Dia_Id")
    hinit = request.form.get("HoraInicio")
    hfini = request.form.get("HoraFinal")
    carrera_id = request.form.get("Carrera_Id")
    lugar_id =request.form.get("Lugar_Id")
 
    if request.method=="POST":
-      verificar = cursor.execute("SELECT NombreMateria FROM Materia WHERE NombreMateria = ?",(nombre)).fetchone()
+      verificar = cursor.execute("SELECT NombreMateria FROM Materias WHERE NombreMateria = ?",(nombre)).fetchone()
       print(verificar)
       
       if verificar is None:
-         cursor.execute("INSERT INTO Materia (NombreMateria,Dias,HoraInicio,HoraFinal,Carrera_Id,Lugar_Id)"
-                        "VALUES (?,?,?,?,?,?)",(nombre,dias,hinit,hfini,carrera_id,lugar_id))
+         cursor.execute("INSERT INTO Materias (NombreMateria,HoraInicio,HoraFinal,Dia_Id,Carrera_Id,Lugar_Id)"
+                        "VALUES (?,?,?,?,?,?)",(nombre,hinit,hfini,dias,carrera_id,lugar_id))
          cursor.commit()
          cursor.close()
          flash("Registro exitoso")
@@ -269,7 +269,7 @@ def viewA():
 @app.route('/Clases',methods=["GET", "POST"])
 def viewClass():
    cursor = db.cursor()
-
+   dias = cursor.execute("SELECT Id, NombreDia FROM Dias_Materia").fetchall()
    carrera = cursor.execute("SELECT Id, NombreCarrera FROM Carrera").fetchall()
    lugar = cursor.execute("SELECT Id, NombreLugarMaterias FROM Lugar_Materias").fetchall()
 
@@ -278,11 +278,11 @@ def viewClass():
    #Verificar si hay registros 
    if len(consulta) == 0:
       flash("Aun no hay registros aqui")
-      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar)
+      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar,dias = dias)
 
    else:
       cursor.close()   
-      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar)
+      return render_template("materias.html", clases = consulta, carreras = carrera , lugares = lugar , dias = dias)
 
 
 @app.route('/Docentes',methods=["GET", "POST"])
@@ -290,17 +290,16 @@ def viewDocen():
    cursor = db.cursor()
    
    dep = cursor.execute("SELECT Id, NombreDepartamento FROM Departamento").fetchall()
-   clases = cursor.execute("SELECT Id, NombreMateria FROM Materia").fetchall()
 
    consulta = cursor.execute("EXEC usp_ViewDocent").fetchall()
    
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
-      return render_template("maestros.html",Info = consulta, dep = dep , clases = clases)
+      return render_template("maestros.html",Info = consulta, dep = dep)
 
    else:
      cursor.close()  
-     return render_template("maestros.html",Info = consulta, dep = dep , clases = clases)
+     return render_template("maestros.html",Info = consulta, dep = dep)
 
 
 
@@ -315,25 +314,26 @@ def rellenoAlumn(codigo):
    row = cursor.execute(Año).fetchall()
    query = cursor.execute("SELECT *FROM Estudiantes WHERE codigo = ?",(codigo)).fetchone()
    cursor.close()
-   return redirect (url_for("Alumnos.html",title = "Edit Student", edit = query, carreras = rows , Años = row))
+   return render_template("alumnos.html",title = "Edit Student", edit = query, carreras = rows , Años = row)
+
 
 @app.route('/EditarDocente/<string:codigo>', methods=["GET","POST"])
 def rellenoDocent(codigo):
    cursor = db.cursor()
-   carrera = cursor.execute("SELECT Id, NombreCarrera FROM Carrera").fetchall()
-   lugar = cursor.execute("SELECT Id, NombreLugarMaterias FROM Lugar_Materias").fetchall()
-   uwu = cursor.execute("SELECT *FROM Docentes WHERE codigo = ?",(codigo)).fetchone()
+   dep = cursor.execute("SELECT Id , NombreDepartamento FROM Departamento").fetchall()
+   docent = cursor.execute("SELECT *FROM Docentes WHERE codigo = ?",(codigo)).fetchone()
    cursor.close()
-   return redirect(url_for("maestros.html",edit = uwu, carreras = carrera , lugares = lugar))
+   return render_template("maestros.html",edit = docent, dep = dep)
 
 @app.route('/EditarClase/<int:id>', methods = ["GET","POST"])
 def rellenoclase(id):
    cursor = db.cursor()
+   dias = cursor.execute("SELECT Id, NombreDia FROM Dias_Materia").fetchall()
    carrera = cursor.execute("SELECT Id, NombreCarrera FROM Carrera").fetchall()
    lugar = cursor.execute("SELECT Id, NombreLugarMaterias FROM Lugar_Materias").fetchall()
    owo = cursor.execute("SELECT *FROM Materia WHERE Id = ?",(id)).fetchone()
    cursor.close()
-   return redirect(url_for("materias.html", edit = owo, carreras = carrera, lugares = lugar))
+   return render_template("materias.html", edit = owo, carreras = carrera, lugares = lugar)
 
 @app.route('/EditarCarrera/<int:id>', methods=["GET","POST"])
 def rellenocarrera(id):
@@ -342,16 +342,23 @@ def rellenocarrera(id):
    row = cursor.execute(dep).fetchall()
     
    query = cursor.execute("SELECT *FROM Carrera WHERE Id = ? ", (id)).fetchone()
-   return redirect(url_for("masregistros.html", edit = query , dept = row))
+   return render_template("masregistros.html", edit = query , dept = row)
 
 @app.route('/EditarUbicacion/<int:id>', methods=["GET","POST"])
 def rellenoubi(id):
    cursor = db.cursor()
-   xd = "SELECT *FROM Lugar_Materia"
+   xd = "SELECT *FROM Lugar_Materia WHERE Id = ?",(id)
    query = cursor.execute(xd).fetchone()
    cursor.close()
-   return redirect(url_for("masregistros.html",edit2 = query)) 
+   return render_template("masregistros.html",edit2 = query)
 
+@app.route('/EditarAsignacion/<int:id>',methods= ["GET","POST"])
+def rellenoAsig(id):
+   cursor = db.cursor()
+   clases = cursor.execute("SELECT Id , NombreMateria FROM Materias").fetchall()
+   prof = cursor.execute("SELECT Id , NombreDocente FROM Docentes").fetchall()
+   consult = cursor.execute("SELECT *FROM Asignacion WHERE Id = ?",(id)).fetchone()
+   return render_template("masregistros.html", edi4 = consult, clases = clases, profs = prof)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
 def rellenoAsis(id):
@@ -363,7 +370,7 @@ def rellenoAsis(id):
    clas = cursor.execute(xd).fetchall()
 
    query = cursor.execute("SELECT *FROM  Asistencia WHERE Id = ?",(id)).fetchone()
-   return redirect(url_for("masregistros.html", edit3 = query , alum = alum, clase = clas))
+   return render_template("masregistros.html", edit3 = query , alum = alum, clase = clas)
 
 
 #Eliminar Registros
@@ -409,7 +416,7 @@ def deletecar(id):
    cursor.commit()
    flash("Registro eliminado")
    cursor.close()
-   redirect("RegMenores.html")
+   return redirect("RegMenores.html")
 
 @app.route('/EliminarLugar/<int:id>')
 def deletelugar(id):
@@ -419,6 +426,15 @@ def deletelugar(id):
    flash("Registro eliminado")
    cursor.close()
    redirect("/RegMenores")   
+
+@app.route('/EliminarAsignacion/<int:id>')
+def deleteasig(id):
+    cursor = db.cursor()
+    query = cursor.execute("DELETE FROM Asignacion WHERE Id = ?",(id))
+    cursor.commit()
+    flash("Registro Eliminado")
+    cursor.close()
+    return redirect(url_for("RegMenores.html"))   
 
 
 #Funcionalidades Propias XD
@@ -442,9 +458,9 @@ def search():
         print("Es Estudiante")
         return render_template("Alumnos.html", Info = query, query = 1)
        
-       elif len(query) == 9:
+       elif len(query) == 7:
           print("Es Docente")
-          return render_template("Materias.html", Info = query, query = 1)
+          return render_template("Materias.html", clases = query, query = 1)
        
        elif len(query) == 6:
           print("Es una clase") 

@@ -1,21 +1,39 @@
 {%extends "layout.html"%}
 {%block main%}
+<style>
+  li, ul{
+    color: white;
+    margin-top: none;
+    
+  }
+  #inf{
+    border-bottom: none;
+    position: relative;
+    top: 7px;
+    padding:0px;
+  }
+  #car{
+     width:max-content;
+     background-color: #212529;
+     padding:5px;
+  }
+</style>
 <main>
-  <div class="container">
-      <div class="card-container boder-light" style='grid-template-columns: 400px 523px;'>
+  <div class="container" style='max-width: 100%;'>
+      <div class="card-container boder-light" style='grid-template-columns: 525px 430px;'>
           <div class="img" style='overflow-x: auto;'>
-            <div class="card-view">
-              <div class="title" style='display: flex; gap: 10px;' >
-                <span><h5>#</h5></span> <span><h5>Materia</h5></span><span><h5>Dias</h5></span><span><h5>HoraInicio</h5></span><span><h5>HoraFinal</h5></span><span><h5>Lugar</h5></span>
-                <div class="card-contenido" >
-                  <h6>Nombre Clase xdxdxd</h6>
-                </div>
-              </div>
-              <hr>
-              <div class="contenido">
-                
-              </div>
-           
+            {%for info in clases%}
+              <div class="card" id='car'>
+                 <ul class='info' id='inf'>
+                   <li><span>Codigo = {{info[1]}}</span></li>
+                   <li><span>Clase = {{info[2]}}</span></li>
+                   <li><span>Inicio = {{info[3]}}</span></li>
+                   <li><span>Final = {{info[4]}}</span></li>
+                   <li><span>Dia = {{info[5]}}</span></li>
+                   <li><span>Carrera = {{info[6]}}</span></li>
+                   <li><span>Lugar = {{info[7]}}</span></li>
+                 </ul>
+              {%endfor%}                       
             </div>
           </div>
           <form action="/RegistroClases" method="post">
@@ -23,28 +41,7 @@
                <div class="xd" style='margin:0 auto; width: 300px;'>
                    <input type="text" class="input" name='Nombre' style='width:320px;' required="">
                  </div>
-                 
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Monday">
-                    <label class="form-check-label" for="inlineCheckbox1">Monday</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name='Dias' value="Tuesday">
-                    <label class="form-check-label" for="inlineCheckbox2">Tuesday</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias'  value="Wednesday">
-                    <label class="form-check-label" for="inlineCheckbox1">Wednesday</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="Dias" value="Thursday">
-                    <label class="form-check-label" for="inlineCheckbox2">Thursday</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name='Dias' value="Friday">
-                    <label class="form-check-label" for="inlineCheckbox1">Friday</label>
-                  </div>
-                 
+                           
                  <div class="hora">
                      <div class="horaInicio">
                          <label for="">Start Time</label>
@@ -55,6 +52,12 @@
                           <input type="time" name='HoraFinal'style="border-radius: 30px;text-align: end;" >
                      </div>
                  </div>
+                 <select class="form-select" id='combobox'  name='Dia_Id'style='position: relative; left:4rem'  required="">
+                  <option selected>Select a Day</option>
+                   {%for dia in dias%}
+                   <option value="{{dia[0]}}">{{dia[1]}}</option>
+                   {%endfor%}
+                 </select>
                  <select class="form-select" id='combobox' name='Carrera_Id' style='position: relative; left:4rem' required="">
                      <option selected>Select a career</option>
                    {%for carrera in carreras%}

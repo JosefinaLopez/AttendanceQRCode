@@ -63,8 +63,8 @@
     <br>
     <div class="card border-info mb-3" style="max-width: 16rem;" id='card-clases'>
       <div class="card-body">
-        <h3>Estructuras de datos I</h3>
-        <h5 style='color: red;'>Ends at 3:40 PM</h5>
+        <h3>{{clase}}</h3>
+        <h5 style='color: red;'>Ends at {{final}}</h5>
         <span><i class="bi bi-people-fill"></i>  0</span>
       </div>
     </div>
@@ -78,33 +78,49 @@
 <script type='text/javascript'  src="/static/script/instascan.min.js"></script>
 <script type='text/javascript'  src='/static/script/clock.js'></script>
 <script type='text/javascript'>
-  var sound = new Audio("/static/barcode.wav")
-  let scanner = new Instascan.Scanner({video:document.getElementById('preview')});
-  var scanneroff = document.getElementById("offcamara");
-  scanner.addListener('scan', function(content)
-  {
-    sound.play();
-    $('.site-backdrop').html(content);
-  });
-  Instascan.Camera.getCameras().then(function(cameras)
-  {
-    if(cameras.length > 0)
-    {
-      scanner.start(cameras[0]);
-    }
-    else
-    {
-       console.error("la camara no funciona")
-    }
-  }).catch(function(e)
-  {
-    console.error(e);
-  });
+var sound = new Audio("/static/barcode.wav")
+let scanner = new Instascan.Scanner({video:document.getElementById('preview')});
+var scanneroff = document.getElementById("offcamara");
+scanner.addListener('scan', function(content)
+{
+  sound.play();
+  $('.site-backdrop').html(content);
 
-  scanneroff.onclick = function(cameras)
+  // Enviar `content` al servidor Flask
+  $.ajax({
+    url: '/Asistencia',
+    type: 'POST',
+    contentType: 'app/json',
+    data: JSON.stringify({ Codigo: content }),
+    success: function(response) {
+      // Manejar la respuesta del servidor si es necesario
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+});
+
+Instascan.Camera.getCameras().then(function(cameras)
+{
+  if(cameras.length > 0)
   {
-    scanner.stop(cameras[0]);
+    scanner.start(cameras[0]);
   }
+  else
+  {
+     console.error("la camara no funciona")
+  }
+}).catch(function(e)
+{
+  console.log(e);
+});
+
+scanneroff.onclick = function(cameras)
+{
+  scanner.stop(cameras[0]);
+}
+
 
 </script>
 {%endblock%}

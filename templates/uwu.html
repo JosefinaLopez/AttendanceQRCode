@@ -1,0 +1,108 @@
+{%extends "layout.html"%}
+{%block main%}
+<style>
+  .parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    }
+    
+    .Asignaciones { grid-area: 1 / 1 / 2 / 2;
+      position: relative;
+      left: 270px;
+    }
+    .Ubicaciones { grid-area: 2 / 1 / 3 / 2; }
+    .Carreras { grid-area: 2 / 2 / 3 / 3; }
+    .register{
+    background-color: white;
+    height: 270px;
+    border-radius: 15px;
+    width: 400px;
+    position: relative;
+    left: 70px;
+    }
+    #xd{
+      width: 100px;
+      height: 100px;
+    }
+</style>
+<div class="parent">
+    <div class="Carreras">
+      <div class="register">
+        <h1>Registro de Carreras</h1>
+        <form action="/AgregarCarrera" method="post">
+          <div class="container-stu">
+            <div class="xd">
+              <input type="text" class="input" name='Carrera' placeholder='Carrera' required="">
+            </div>
+            <div class="combo">
+              <select class="form-select" id='combobox' style='width: 55%;' name='Departamento' required="">
+               <option selected>Seleccione su Año Lectivo</option>
+                {%for de in dep%}
+                <option value="{{de[0]}}">{{de[1]}}</option>
+                {%endfor%}
+               </select>
+            </div>
+                <div class="botom">
+                  <button type='submit'class='btn btn-primary'>
+                    Registrar
+                  </button>  
+                </div>
+          </div>
+       </form>
+    </div>   
+    </div>
+    <div class="Ubicaciones">
+      <div class="register">
+        <h1>Registro de Ubicaciones
+        </h1>
+        <form action="/AgregarLugarMateria" method="post">
+          <div class="container-stu">
+            <div class="xd">
+              <input type="text" class="input" name='Lugar' placeholder='Escriba el Lugar' required="">
+            </div>
+            <div class="botom">
+                    <button type='submit'class='btn btn-primary'>
+                      Registrar
+                   </button>
+             </div>
+          </div>
+         </form>
+    </div>
+    </div>
+    <div class="Asignaciones">
+      <div class="register">
+        <h1>Registro de Asignaciones 
+        </h1>
+        <form action="/AsignarDocentes" method="post">
+          <div class="container-stu">
+            <div class="combo">
+              <select class="form-select" id='combobox' style='width: 55%;' name='Maestros' required="">
+               <option selected>Select the teach</option>
+                {%for maestro in maestros%}
+                <option value="{{maestro[0]}}">{{maestro[1]}}</option>
+                {%endfor%}
+               </select>
+            </div>
+     
+            <div class="combo">
+              <select class="form-select" id='combobox' style='width: 55%;' name='Clase' required="">
+               <option selected>Select the class to teach</option>
+                {%for clase in clases%}
+                <option value="{{clase[0]}}">{{clase[1]}}</option>
+                {%endfor%}
+               </select>
+            </div>
+     
+            <div class="botom">
+                    <button type='submit'class='btn btn-primary'>
+                      Registrar
+                   </button>
+             </div>
+          </div>
+         </form>
+    </div>
+  </div>
+{%endblock%}

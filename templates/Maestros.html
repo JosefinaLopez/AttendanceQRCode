@@ -18,11 +18,11 @@
            </li>
            <li> 
             <h5>Class to be Taught</h5>
-            <span><h4>{{Info[0]}}</h4></span>
+            <span><h4>{{clase[0][0]}}</h4></span>
           </li>
            <li>
              <h5>Departament</h5>
-             <span><h4>{{Info[6]}}</h4></span>
+             <span><h4>{{Info[5]}}</h4></span>
            </li>
          </ul>
          <ul class="info xd">
@@ -45,43 +45,45 @@
        {%else%}
        {%for Info in Info%}
        <div class="card-resul">
-        <div class="image">
-          <img src="{{Info[4]}}" alt="Código QR" id="uwu">
-          <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
-        </div>
-        <div class="info-containere">
-          <ul class="info">
-            <li>
-              <h5>Teacher Name</h5>
-              <span><h4>{{Info[1]}}</h4></span>
-            </li>
-            <li>
-              <h5>Class to be Taught</h5>
-              <span><h4>{{Info[0]}}</h4></span>
-            </li>
+         <div class="image">
+           <img src="{{Info[4]}}" alt="Código QR" id="uwu">
+           <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
+          </div>
+          <div class="info-containere">
+            <ul class="info">
+              <li>
+                <h5>Teacher Name</h5>
+                <span><h4>{{Info[1]}}</h4></span>
+              </li>
+              {%for clas in clase%}
+              <li>
+                <h5>Class to be Taught</h5>
+                <span><h4>{{clase[0][0]}}</h4></span>
+              </li>
+              {%endfor%}
             <li> 
               <h5>Departament</h5>
-              <span><h4>{{Info[6]}}</h4></span>
+              <span><h4>{{Info[5]}}</h4></span>
             </li>
           </ul>
           <ul class="info xd">
-           <li>
-           <h5>Phone</h5>
-           <span><h4>{{Info[3]}}</h4></span>
-           </li>
-           <li>
-           <h5>E-Mail</h5>
-           <span><h4>{{Info[2]}}</h4></span>
-           </li>
-           <div class="lef">
-           <a href="#">Edit</a>        
-           <a href="#" style='background-color: red;'>Delete</a>
-           </div>
+            <li>
+              <h5>Phone</h5>
+              <span><h4>{{Info[3]}}</h4></span>
+            </li>
+            <li>
+              <h5>E-Mail</h5>
+              <span><h4>{{Info[2]}}</h4></span>
+            </li>
+            <div class="lef">
+              <a href="#">Edit</a>        
+              <a href="#" style='background-color: red;'>Delete</a>
+            </div>
           </ul>
         </div>
         <span class="carnet">{{Info[0]}}</span>
-        </div>
-        {%endfor%}
+      </div>
+      {%endfor%}
        {%endif%}
      </div>
      <div class="optionsuwu">

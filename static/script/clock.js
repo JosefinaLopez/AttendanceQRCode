@@ -10,7 +10,7 @@ function clock() {
     h = h ? h : 12;
 
     //En base a eso se crea una cade con el formato 3:30 PM
-    var time = h + ':' + (M < 10 ? '0' : '') + M + " " + amp;
+    var time = h + ':' + (M < 10 ? '0' : '') + M +" "+ amp;
     //Se agrega al elemento con id 'clock'
     document.getElementById('clock').innerHTML = time;
      

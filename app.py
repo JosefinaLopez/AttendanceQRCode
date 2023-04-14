@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, session, request, flash, sen
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
 import datetime
-from view import mostrar
+from Funcionalidad_Asistencia import Asistencia
 from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
@@ -18,34 +18,51 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
+clasee = ""
+horafinal = ""
+
+
+
 @app.route('/', methods=["GET"])
 def index():
-    # Hora que se manda desde el reloj JavaScript cada 1 minuto
     hora_actual = request.args.get('time', '')
-  
     dia_actual = datetime.datetime.now().strftime("%A")
-
-    # Se llama al procedimiento almacenado para obtener la información de las clases
     cursor = db.cursor()
-    info = cursor.execute("EXEC usp_FuncionalidadIndex ?", (dia_actual,)).fetchall()
+
+    now = datetime.datetime.now()
+    current_time = now.strftime("%I:%M%p")
+
+    if hora_actual is None or len(hora_actual) == 0:
+        hora_actual = current_time
+    else:
+        hora_actual = hora_actual    
+  
+    info = cursor.execute("EXEC usp_FuncionalidadIndex ?,?", (dia_actual, hora_actual)).fetchall()
     print(info)
     
     clase_actual = None
     final_actual = None
+    
     for clase, inicio, final, dia in info:
-      # Do something with the values
-      clase_actual = clase
-      final_actual = final
-
-      print(clase, inicio, final, dia)
-
-    # Se renderiza la plantilla con la información de la clase en curso (si existe)
+        clase_actual = clase
+        final_actual = final
+        print(clase, inicio, final, dia)
+     
     if clase_actual is not None:
-        flash(f"La clase {clase_actual} está en curso")
-        return render_template("index.html", clase=clase_actual, final=final_actual)
+        
+       global clasee
+       global horafinal
+       clasee = clase_actual 
+       horafinal = final_actual
+
+       flash(f"La clase {clase_actual} está en curso")
+       cursor.close()
+       return render_template("index.html", clase=clase_actual, final=final_actual)
     else:
         return render_template("index.html", clase="Aún no hay", final="00:00")
 
+   
              
      
 @app.route("/RegistroAlumno",methods=["GET","POST"])
@@ -192,7 +209,7 @@ def docentes():
          cursor.close()
          remove(ruta)
          flash("Registro existoso")
-         return redirect("/Docentes")
+         return redirect("/MasRegistros")
       else: 
          flash("Registro Ya Existe") 
          return redirect("/Docentes")       
@@ -230,15 +247,90 @@ def maestros():
 
    return redirect("/Clases")
 
-@app.route('/MasRegistros')
-def regis():
-   return render_template("masregistros.html")
+@app.route('/MasRegistros', methods=["GET", "POST"])
+def regisma():
+   cursor = db.cursor()
+   docent = cursor.execute("SELECT Id ,NombreDocente FROM Docentes").fetchall()
+   clase = cursor.execute("SELECT Id , NombreMateria FROM Materias").fetchall()
+   de = cursor.execute("SELECT Id, NombreDepartamento FROM Departamento").fetchall()
+
+   return render_template("uwu.html" , maestros = docent, clases = clase, dep = de)
+
+@app.route('/AsignarDocentes', methods=["GET", "POST"])
+def asign():
+   cursor = db.cursor()
+   docent = cursor.execute("SELECT Id ,NombreDocente FROM Docentes").fetchall()
+   clase = cursor.execute("SELECT Id , NombreMateria FROM Materias").fetchall()
+
+   if request.method == "POST":
+    
+    maest = request.form.get("Maestros")
+    clas = request.form.get("Clase")
+    verificar = cursor.execute("SELECT Id FROM Asignacion WHERE Materia_Id = ?",(clas)).fetchone()
+    if verificar is None:
+       cursor.execute("INSERT INTO Asignacion (Docente_Id, Materia_Id) VALUES(?,?)",(maest,clas))
+       cursor.commit()
+       flash("Asignacion Registrada")
+       return render_template("uwu.html", maestros = docent, clases = clase)
+    else:
+       flash("La Asignacion Ya existe")
+       return render_template("uwu.html" ,maestros = docent, clases = clase)
+
+@app.route('/AgregarUbicaciones', methods=["GET", "POST"])
+def regisubi():
+   cursor = db.cursor()
+   if request.method == "POST":
+      lugar = request.form.get("Lugar")
+      verificar = cursor.execute("SELECT NombreLugarMaterias FROM Lugar_Materias WHERE NombreLugarMaterias = ?", (lugar)).fetchone()
+      if verificar is None:
+         cursor.execute("INSERT INTO Lugar_Materias (NombreLugarMaterias) VALUES(?)",(lugar))
+         cursor.commit()
+         flash("Ubicacion Registrada")
+         return render_template("uwu.html")
+      else:
+         flash("La ubicacion ya existe")  
+         return render_template("uwu.html")
+
+@app.route('/AgregarCarrera', methods=["GET", "POST"])
+def asistencia():
+   cursor = db.cursor()
+   carrera = request.form.get("Carrera")
+   dep = request.form.get("Departamento")
+   if request.methods == "POST":
+      
+      de = cursor.execute("SELECT Id, NombreDepartamento FROM Departamento").fetchall()
+
+      verificar = cursor.execute("SELECT NombreCarrera FROM Carrera WHERE NombreCarrera = ?", (carrera)).fetchone()
+      if verificar is None:
+         cursor.execute("INSERT INTO Carrera (NombreCarrrera,Departamento_Id) VALUES(?,?)",(carrera,dep))
+         cursor.commit()
+         flash("Registro Exitoso")
+         cursor.close()
+         return render_template("uwu.html", dep = de)
+      else:
+         flash("Registro Existente")   
+         return render_template("uwu.html", dep = de)
+
 
 @app.route('/Asistencia', methods=["GET", "POST"])
-def asistencia():
-    if request.method=="GET":
-       
-     return render_template("qrscan.html")  
+def asistenciauwu():
+    cursor = db.cursor()
+    global clasee
+    global horafinal
+    codigo = request.args.get("Codigo")
+    fecha_actual = datetime.date.today()
+    print(fecha_actual)
+    print(codigo)
+    if request.method=="POST":
+         if codigo is None:
+            
+            flash("Aun no hay Clases en Curso")
+            return render_template("qrscan.html", clase = clasee, final = horafinal)  
+         else:
+            flash("Registro de Asistencia Exitoso")
+            return render_template("qrscan.html", clase = clasee , final = horafinal)  
+    else:
+       return render_template("qrscan.html", clase = clasee , final = horafinal)      
     
     
 
@@ -292,14 +384,15 @@ def viewDocen():
    dep = cursor.execute("SELECT Id, NombreDepartamento FROM Departamento").fetchall()
 
    consulta = cursor.execute("EXEC usp_ViewDocent").fetchall()
-   
+   clase_asignada = cursor.execute("SELECT NombreMateria FROM Asignacion a INNER JOIN Materias m ON m.Id = a.Materia_Id").fetchall()
+
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
-      return render_template("maestros.html",Info = consulta, dep = dep)
+      return render_template("maestros.html",Info = consulta, clase = clase_asignada, dep = dep)
 
    else:
      cursor.close()  
-     return render_template("maestros.html",Info = consulta, dep = dep)
+     return render_template("maestros.html",Info = consulta,clase = clase_asignada ,dep = dep)
 
 
 
@@ -507,11 +600,12 @@ def login():
       if verificar is None:
          print("No existe el usuario")
          return render_template("Login.html")
+      
       elif (check_password_hash(verificar[2],password)):
          session["user_id"] = verificar[0]
          user = session["username"] = verificar[1]
          flash(f"Bienvenido(a) {user}")
-         return render_template("index.html", usser = username)
+         return redirect("/")
       else:
          flash("Contraseña Incorrecta")
          return render_template("Login.html")

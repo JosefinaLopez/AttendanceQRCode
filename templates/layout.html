@@ -1,135 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style_layout.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-    <title>Sidebar</title>
-    <link rel="stylesheet" href="/static/style.css"/>
-  </head>
-  <body>
-    <!-- <header></header> -->
-    <main class="container-sidebar">
-      <aside class="sidebar">
-        <div class="top-sidebar">
-          <h1 style='padding: 10px;'>Skytech</h1>
-         
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container-nav">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class='icon'><i class="bi bi-github"></i></span>
+                        <span class='title'>SkyTech</span>
+                    </a>
+                    <hr>
+                </li>
+                <li>
+                    <a href="/Asistencia">
+                        <span class='icon'><i class="bi bi-qr-code-scan"></i></span>
+                        <span class='title'>Attendance</span>
+                    </a>
+                </li>
 
-          <ul class="options menu">
-            <li class="option">
-              <a href="/">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="23" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
-                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-                  <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
-                </svg>
-                <span>Home</span>
-              </a>
-            </li>
-        <li class="option">
-          <a href="/Asistencia">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="20" fill="currentColor" class="bi bi-calendar2-check-fill" viewBox="0 0 16 16">
-              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zm-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
-            </svg>				
-               <span>Assistance</span>
-          </a>
-        </li>
+                <li>
+                    <a href="/RegistroAlumno">
+                        <span class='icon'><i class="bi bi-mortarboard-fill"></i></span>
+                        <span class='title'>Students</span>
+                    </a>
+                </li>
 
-        <li class="option">
-          <a href="/Logout">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="22" fill="currentColor" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
-              <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1z"/>
-            </svg>
-            <span>Exit</span>
-          </a>
-        </li>
+                <li>
+                    <a href="/RegistroDocentes">
+                        <span class='icon'><i class="bi bi-cup-hot-fill"></i></span>
+                        <span class='title'>Teachers</span>
+                    </a>
+                </li>
 
-          </ul>
+                <li>
+                    <a href="/RegistroClases">
+                        <span class='icon'><i class="bi bi-book-fill"></i></span>
+                        <span class='title'>Classes</span>
+                    </a>
+                </li>
 
+                <li>
+                    <a href="/Asignaciones">
+                        <span class='icon'><i class="bi bi-people-fill"></i></span>
+                        <span class='title'>Asignaciones</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="">
+                        <span class='icon'><i class="bi bi-calendar-week-fill"></i></span>
+                        <span class='title'>Horario</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Logout">
+                        <span class='icon'><i class="bi bi-box-arrow-in-right"></i></span>
+                        <span class='title'>Sign Out</span>
+                    </a>
+                </li>
+            </ul>    
         </div>
-        <div class="bottom-sidebar">
-          <hr style='color: white;'>
-          <ul class="options">
-          
-            <li class="option">
-                  <a href="/Alumnos">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="27" height="30" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 18 16">
-                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
-                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
-                  </svg>
-                  <span>Students</span>
-                  </a>
-            </li>
-        
-            <li class="option">
-              <a href="/Clases">
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="21" fill="currentColor" class="bi bi-book-fill" viewBox="0 0 16 16">
-                <path d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
-              </svg>
-                  <span>Classes</span>
-              </a>
-
-            </li>
-             <li class='option'>
-              <a href="/Docentes">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="22" fill="currentColor" class="bi bi-cup-hot-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6H.5ZM13 12.5a2.01 2.01 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5Z"/>
-                  <path d="m4.4.8-.003.004-.014.019a4.167 4.167 0 0 0-.204.31 2.327 2.327 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.31 3.31 0 0 1-.202.388 5.444 5.444 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 3.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8Zm3 0-.003.004-.014.019a4.167 4.167 0 0 0-.204.31 2.327 2.327 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.31 3.31 0 0 1-.202.388 5.444 5.444 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 6.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8Zm3 0-.003.004-.014.019a4.077 4.077 0 0 0-.204.31 2.337 2.337 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.198 3.198 0 0 1-.202.388 5.385 5.385 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 9.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8Z"/>
-                </svg>
-                  <span>Teachers</span>
-              </a>
-              </li>
-              
-            <li class="option">
-              <a href="/MasRegistros">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="22" fill="currentColor" class="bi bi-folder-fill" viewBox="0 0 16 16">
-                  <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
-                </svg>
-                <span>More records</span>
-              </a>
-            
-            </li>
-          </ul>
-         
-        </div>
-      </aside>
-      <section>
-        <header class="header-page">
-          <div class="left">
-          </div>
-          <div class="right">
-
-            <form action='/Search' method='post' style='display: flex;'>
-              <div class="search">
-                <input type="text" class='search-input' name='Search' placeholder='Search'>
-                 <button type="submit" style=' border-bottom: none; background-color: white; border: none; '>
-                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                   </svg>              
-                 </button>
-              </div>
-            </form>
-
-          </div>
-        </header>
-				<section>
-          {% if get_flashed_messages() %}
-          <div class="alert alert-primary border text-center alert-dismissible" role="alert"> 
-          {{ get_flashed_messages() | join(" ")}}
-            <div class="btn-alert">
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <i class="bi bi-list"></i>
+                </div>
+                <!--Search -->
+                <div class="search">
+                   <label>
+                       <input type="text" name="" placeholder='Search Here'>
+                       <a href="/Search">
+                        <i class="bi bi-search"></i>
+                       </a>
+                   </label>
+                </div>
+                <!--User Img-->
             </div>
-          </div>
-          {% endif %}
-          {%block main%}
-          {%endblock%}
-				</section>
-      </section>
-    </main>
-    <!-- <footer>
+            <section class='content'>
+                {% if get_flashed_messages() %}
+                <div class="alert alert-primary border text-center alert-dismissible" role="alert"> 
+                {{ get_flashed_messages() | join(" ")}}
+                  <div class="btn-alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
+                  </div>
+                </div>
+                {% endif %}
+                {%block main%}
+                {%endblock%}
+            </section>
+            <footer class='footer'>
+              <p>&copy; SkyTech 2023</p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        //Menu Toogle
+        let toggle = document.querySelector('.toggle');
+        let navigation = document.querySelector('.navigation');
+        let main = document.querySelector('.main');
 
-    </footer> -->
+        toggle.onclick = function(){
+            navigation.classList.toggle('active');
+            main.classList.toggle('active');
+        }
+
+        //Add Hover xd
+        let list = document.querySelectorAll('.navigation li');
+        function activeLink(){
+            list.forEach((item) => 
+            item.classList.remove('hovered'));
+            this.classList.add('hovered');
+        }
+        list.forEach((item) => 
+        item.addEventListener('mouseover', activeLink));
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-  </body>
+</body>
 </html>

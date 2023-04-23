@@ -4,79 +4,112 @@
   li, ul{
     color: white;
     margin-top: none;
-    
   }
-  #inf{
-    border-bottom: none;
+  #combobox{
+    position: relative; left:2rem
+  }
+  .container-card{
+    overflow-y: auto;
+    max-width: 780px;
+    border-radius: 15px;
+    max-height: 570px;
     position: relative;
-    top: 7px;
-    padding:0px;
-  }
-  #car{
-     width:max-content;
-     background-color: #212529;
-     padding:5px;
+    left: 9px;
   }
 </style>
 <main>
-  <div class="container" style='max-width: 100%;'>
-      <div class="card-container boder-light" style='grid-template-columns: 525px 430px;'>
-          <div class="img" style='overflow-x: auto;'>
-            {%for info in clases%}
-              <div class="card" id='car'>
-                 <ul class='info' id='inf'>
-                   <li><span>Codigo = {{info[1]}}</span></li>
-                   <li><span>Clase = {{info[2]}}</span></li>
-                   <li><span>Inicio = {{info[3]}}</span></li>
-                   <li><span>Final = {{info[4]}}</span></li>
-                   <li><span>Dia = {{info[5]}}</span></li>
-                   <li><span>Carrera = {{info[6]}}</span></li>
-                   <li><span>Lugar = {{info[7]}}</span></li>
-                 </ul>
-              {%endfor%}                       
-            </div>
-          </div>
-          <form action="/RegistroClases" method="post">
-            <h1>Class Registration</h1>
-               <div class="xd" style='margin:0 auto; width: 300px;'>
-                   <input type="text" class="input" name='Nombre' style='width:320px;' required="">
-                 </div>
-                           
-                 <div class="hora">
-                     <div class="horaInicio">
-                         <label for="">Start Time</label>
-                         <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;">   
-                      </div>
-                      <div class="horafinal">
-                          <label for="">Final Time</label>
-                          <input type="time" name='HoraFinal'style="border-radius: 30px;text-align: end;" >
-                     </div>
-                 </div>
-                 <select class="form-select" id='combobox'  name='Dia_Id'style='position: relative; left:4rem'  required="">
-                  <option selected>Select a Day</option>
-                   {%for dia in dias%}
-                   <option value="{{dia[0]}}">{{dia[1]}}</option>
-                   {%endfor%}
-                 </select>
-                 <select class="form-select" id='combobox' name='Carrera_Id' style='position: relative; left:4rem' required="">
-                     <option selected>Select a career</option>
-                   {%for carrera in carreras%}
-                   <option value="{{carrera[0]}}">{{carrera[1]}}</option>
-                   {%endfor%}
-               </select>
-           <select class="form-select" id='combobox'  name='Lugar_Id'style='position: relative; left:4rem'  required="">
-             <option selected>Select a location</option>
-              {%for lugar in lugares%}
-              <option value="{{lugar[0]}}">{{lugar[1]}}</option>
+  <div class="result-container">
+      <div class="container-card">
+        <div class="card-result">
+          <table class="table table-dark table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Class</th>
+                <th scope='col'>Career</th>
+                <th scope='col'>Year School</th>
+                <th scope='col'>Update</th>
+                <th scope='col'>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%if query == 1%}
+              <tr>
+                <th scope="row">{{info[0]}}</th>
+                <td>{{info[1]}}</td>
+                <td>{{info[2]}}</td>
+                <td>{{info[3]}}</td>
+                <td>
+                  <a href="/EditarClase/{{info[0]}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                      <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                    </svg>
+                  </a>
+                </td>
+                <td>
+                  <a href="/EliminarClase/{{info[0]}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+              {%else%}      
+              {%for info in clases%}
+              <tr>
+                <th scope="row">{{info[0]}}</th>
+                <td>{{info[1]}}</td>
+                <td>{{info[2]}}</td>
+                <td>{{info[3]}}</td>
+                <td>
+                  <a href="/EditarClase/{{info[0]}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                      <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                    </svg>
+                  </a>
+                </td>
+                <td>
+                  <a href="/EliminarClase/{{info[0]}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
               {%endfor%}
-            </select>
-               <div class="botom">
-                   <button type='submit' id='btn' class='btn'>
-                    Class Registration
-                  </button>
-               </div>
-           </form>
-        </div>
+              {%endif%}
+            </tbody>
+          </table>
+        </div>  
       </div>
+      <div class="optionsuwu">
+        <form action="/RegistroClases" method="post">
+          <h1>{{'Update Class ' if edit else 'Register Class'}}</h1>
+             <div class="xd" style='margin:0 auto; width: 300px;'>
+                 <input type="text" class="input" name='Nombre' value="{{edit[2] if edit else ''}}" style='width:320px;' required title="Provide a Class">
+               </div>
+                    
+               <select class="form-select" id='combobox' name='Carrera_Id' required title="Select Your Career">
+                   <option selected>Select a career</option>
+                 {%for carrera in carreras%}
+                 <option value="{{carrera[0]}}"{%if edit and edit[3]==carrera[0]%}selected{%endif%}>{{carrera[1]}}</option>
+                 {%endfor%}
+             </select>
+              <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
+               <option selected>Select a academic year</option>
+                {%for Año in años%}
+                <option value="{{Año[0]}}" {%if edit and edit[4] == Año[0]%}selected{%endif%}>{{Año[1]}}</option>
+                {%endfor%}
+               </select>
+
+             <div class="botom">
+              <input type="hidden" name="Codigo" value="{{ edit[1] if edit else '' }}">
+                 <button type='submit' id='btn' class='btn'>
+                  {{'Update' if edit else 'Register'}}
+                </button>
+             </div>
+         </form>
+      </div>
+  </div>
 </main>
 {%endblock%}

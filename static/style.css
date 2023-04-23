@@ -1,9 +1,4 @@
 
-body{
-  background-color: #86b7fe;
-}
-
-
 .container-stu{
   width: 290px;
   margin: 0 auto;
@@ -90,121 +85,10 @@ font-size: medium;
   border-radius: 10px;
   height: 35rem;
   position: relative;
-  right: 75px;
+  right: 50px;
   top: 1px;
 }
 /*FIN*/
-/*Estilos Layout*/
-.container-sidebar {
-  margin: 0;
-  display: grid;
-  grid-template-columns: 200px auto;
-  height: 100vh;
-  overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-a ,h1{
-   text-decoration: none;
-   color: #6285f8;
-}
-/* #region header */
-.sidebar {
-  
-  background-color:#212529;;
-
-  border-bottom: 1px solid #000;
-  padding: 0 .75rem;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.options {
-  list-style: none;
-  padding-left: 0;
-  overflow-y: auto;
-}
-
-.option {
-  padding: .5rem;
-  border-radius: .325rem;
-}
-
-.option:hover {
-  background-color: rgb(176, 186, 221);
-  user-select: none;
-}
-
-.option svg {
-  vertical-align: middle;
-}
-
-.option span {
-  font-weight: bold;
-}
-
-.bottom-sidebar {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.bottom-sidebar h2 {
-  margin: 0;
-}
-
-.options.menu {
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-/* #endregion */
-
-
-/* #region header */
-.header-page {
-  background-color: #86b7fe;
-  padding: 0 .7rem; /* 1 REM === 16PX */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1%;
-}
-
-.left {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-
-.title-page {
-  font-weight: 500;
-  font-size: 1rem;
-}
-
-.search {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: white;
-  border: 1px solid #000;
-  padding:  .25rem;
-  border-radius: 30px;
-  overflow: hidden;
-}
-
-.search-input {
-  border: none;
-  outline: transparent;
-  padding: 2px;
-}
-#owo[open]{
-  background-color: #212529;
-}
-/* #endregion */
 
 .container-table{
   display: flex;
@@ -218,7 +102,8 @@ a ,h1{
 .hora{
   display:flex; margin:3%; left:8rem;
   justify-content: center;
-  gap: 30px;
+  position: relative;
+  left: 15px;
 }
 #card , #info{
 

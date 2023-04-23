@@ -72,37 +72,4 @@
          </form>
     </div>
     </div>
-    <div class="Asignaciones">
-      <div class="register">
-        <h1>Registro de Asignaciones 
-        </h1>
-        <form action="/AsignarDocentes" method="post">
-          <div class="container-stu">
-            <div class="combo">
-              <select class="form-select" id='combobox' style='width: 55%;' name='Maestros' required="">
-               <option selected>Select the teach</option>
-                {%for maestro in maestros%}
-                <option value="{{maestro[0]}}">{{maestro[1]}}</option>
-                {%endfor%}
-               </select>
-            </div>
-     
-            <div class="combo">
-              <select class="form-select" id='combobox' style='width: 55%;' name='Clase' required="">
-               <option selected>Select the class to teach</option>
-                {%for clase in clases%}
-                <option value="{{clase[0]}}">{{clase[1]}}</option>
-                {%endfor%}
-               </select>
-            </div>
-     
-            <div class="botom">
-                    <button type='submit'class='btn btn-primary'>
-                      Registrar
-                   </button>
-             </div>
-          </div>
-         </form>
-    </div>
-  </div>
 {%endblock%}

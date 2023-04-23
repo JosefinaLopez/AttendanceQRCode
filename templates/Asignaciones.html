@@ -1,0 +1,69 @@
+{%extends "layout.html"%}
+{%block main%}
+<style> 
+    .parent{
+      display: flex;
+      justify-content: center;
+    }   
+    #combobox{
+      position: relative; left:4rem
+    }
+    #img{
+      width: 300px;
+      height: 300px;
+    }
+</style>
+<div class="parent">
+    <div class="card-container" style='width: 800px;'>
+      <div class="img-asig">
+        <img src="/static/img/maestro.gif" id='img'>
+      </div>
+        <div class="register">
+            <h1>Asignaciones</h1>
+            <form action="/Asignaciones" method="post">
+
+              <select class="form-select" id='combobox' style='width: 55%;' name='Maestros' required="">
+                <option selected>Select the teach</option>
+                 {%for maestro in maestros%}
+                 <option value="{{maestro[0]}}">{{maestro[1]}}</option>
+                 {%endfor%}
+                </select>
+
+                <select class="form-select" id='combobox' style='width: 55%;' name='Clase_Id' required="">
+                    <option selected>Select the class to teach</option>
+                     {%for clase in clases%}
+                     <option value="{{clase[0]}}">{{clase[1]}}</option>
+                     {%endfor%}
+                    </select>
+                <div class="hora">
+                    <div class="horaInicio">
+                        <label for="">Start Time</label>
+                        <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;">   
+                     </div>
+                     <div class="horafinal">
+                         <label for="">Final Time</label>
+                         <input type="time" name='HoraFinal'style="border-radius: 30px;text-align: end;" >
+                    </div>
+                </div>
+                   <select class="form-select" id='combobox'  name='Dia_Id'style='position: relative; left:4rem'  required="">
+                    <option selected>Select a Day</option>
+                     {%for dia in dias%}
+                     <option value="{{dia[0]}}">{{dia[1]}}</option>
+                     {%endfor%}
+                   </select>
+                   <select class="form-select" id='combobox'  name='Lugar_Id'style='position: relative; left:4rem'  required="">
+                    <option selected>Select a Place</option>
+                     {%for lugar in lugares%}
+                     <option value="{{lugar[0]}}">{{lugar[1]}}</option>
+                     {%endfor%}
+                   </select>
+                   <div class="botom">
+                    <button type='submit'class='btn btn-primary'>
+                      Registrar
+                   </button>
+             </div>
+               </form> 
+        </div>
+    </div>
+</div>
+{%endblock%}

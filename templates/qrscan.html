@@ -89,11 +89,12 @@ scanner.addListener('scan', function(content)
   // Enviar `content` al servidor Flask
   $.ajax({
     url: '/Asistencia',
-    type: 'POST',
-    contentType: 'app/json',
-    data: JSON.stringify({ Codigo: content }),
+    data: {
+      Codigo : content
+    } ,
     success: function(response) {
-      // Manejar la respuesta del servidor si es necesario
+      //nose xd
+      console.log(response)
     },
     error: function(error) {
       console.log(error);

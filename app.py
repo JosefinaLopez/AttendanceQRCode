@@ -2,13 +2,15 @@ from os import remove
 from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
+import pyodbc 
 import datetime
 from Funcionalidad_Asistencia import Asistencia
 from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
-from conexion import connection 
+from conexion import connection , Asistencia
 from cloud_firebase import Send_QR, Link_Img,Link_Download
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -18,11 +20,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
-clasee = ""
-horafinal = ""
-
-from flask import jsonify
 
 @app.route('/', methods=['GET'])
 def index():
@@ -48,27 +45,18 @@ def horario_actual():
     final_actual = None
     if len(info) !=0 :
     
-      for clase, inicio, final, dia in info:
+      for clase, inicio, final in info:
          clase_actual = clase
          final_actual = final
-         print(clase, inicio, final, dia)
-      
-      if clase_actual is not None:
-         
-         global clasee
-         global horafinal
-         clasee = clase_actual 
-         horafinal = final_actual
-
+         print(clase, inicio, final)
          cursor.close()
+      if clase_actual is not None:
          return jsonify({'clase': clase_actual, 'final': final_actual})
       else:
          return jsonify({'clase': 'Aún no hay', 'final': '00:00'})
+    cursor.close()
     return jsonify({'clase': 'Aún no hay', 'final': '00:00'})
-
-      
-
-    
+  
 @app.route("/RegistroAlumno",methods=["GET","POST"])
 def registerA():
 
@@ -82,22 +70,21 @@ def registerA():
    code = 0
    if code_id is None:
      code = 1
-     codigo = f"STUDT0001"
+     codigo = f"STUDNT0001"
    else:
      code = code_id+1
    print(code)
-
    #ESTU0001    
    if code < 10:
-    codigo = f"STUDT000{code}"
+    codigo = f"STUDNT000{code}"
    elif code < 100:
     #ESTU099
-    codigo = f"STUDT00{code}"
+    codigo = f"STUDNT00{code}"
     #ESTU999
    elif code < 1000:
-    codigo = f"STUDT0{code}" 
+    codigo = f"STUDNT0{code}" 
    else:
-      codigo = f"STUDT{code}"  
+      codigo = f"STUDNT{code}"  
 
    if request.method == "POST":
 
@@ -163,22 +150,22 @@ def docentes():
    code = 0
    if(code_id is None):
      code = 1
-     codigo = f"TEACH0001"
+     codigo = f"TEACHR0001"
    else:
      code = code_id+1
    print(code)
 
    #DOCENT0001    
    if code < 10:
-    codigo = f"TEACH000{code}"
+    codigo = f"TEACHR000{code}"
    elif code < 100:
     #DOCENT099
-    codigo = f"TEACH00{code}"
+    codigo = f"TEACHR00{code}"
     #DOCENT0999
    elif code < 1000:
-    codigo = f"TEACH0{code}"    
+    codigo = f"TEACHR0{code}"    
    else:
-    codigo = f"TEACH{code}" 
+    codigo = f"TEACHR{code}" 
 
    #Se crea la imagen de Codigo QR
    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L)
@@ -253,6 +240,37 @@ def maestros():
 
    return redirect("/Clases")
 #######################################################################
+
+@app.route('/Horario',methods=['GET','POST'])
+def hrario():
+   cursor = db.cursor()
+   query = "SELECT Id, NameCareer FROM Career"
+   rows = cursor.execute(query).fetchall()
+
+   Año = "SELECT Id,SchoolYearName FROM School_Year"
+   row = cursor.execute(Año).fetchall()
+   
+   if request.method == "POST":
+       carrera = request.form.get("Carrera")
+       print(carrera)
+       an = request.form.get("Año")
+       
+       verificar = cursor.execute("SELECT a.Teacher_Id FROM Assignment a INNER JOIN Classes c ON a.Classes_Id = c.Id WHERE c.Career_Id = ? AND c.School_Year_Id = ? ",
+                                  (carrera, an)).fetchone()
+       if verificar is not None:
+          flash("Horario encontrado")
+          query = cursor.execute("EXEC usp_ViewHorario ?,?",(carrera,an)).fetchall()
+          # Ordenar la tupla por el día de la semana
+          horario = sorted(query, key=lambda x: x[7])
+          print(horario)
+          return render_template("horario.html", hr = horario, carreras = rows , año = row)
+       else:
+          flash("No hay ningun horario aun")
+       return render_template("horario.html",hr = "",carreras = rows , año = row)
+   else:
+     flash("Seleccione su carrera y Año para mostrar el horario")
+     return render_template("horario.html",hr ="",carreras = rows , año = row)
+
 @app.route('/MasRegistros', methods=["GET", "POST"])
 def regisma():
    cursor = db.cursor()
@@ -267,6 +285,8 @@ def asign():
     clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
     dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
     lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
+    
+    view = cursor.execute("EXEC usp_ViewAsignaciones").fetchall()
 
     if request.method == "POST":
       hora_ini = request.form.get("HoraInicio")
@@ -278,19 +298,19 @@ def asign():
 
       verificar_Horario = cursor.execute("SELECT Id FROM School_Hours WHERE Class_Id = ?",(clase_Id)).fetchone()
       verificar_Docente = cursor.execute("SELECT Id FROM Assignment WHERE Classes_Id = ?",(clase_Id)).fetchone()
-      if verificar_Horario is None and verificar_Docente is None:
+      if verificar_Horario is not None:
          cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id,Class_Id) VALUES(?,?,?,?,?)",
                         (hora_ini,hora_fin,dia_Id,lugar_id,clase_Id)) 
          cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id) VALUES(?,?)",(docent_id,clase_Id)) 
          cursor.commit()
          cursor.close()
          flash("Assignement Succesful")
-         return render_template("Asignaciones.html", docentes = docent, clases = clase, dias = dia, lugares = lugar)
+         return render_template("Asignaciones.html",xd =view ,docentes = docent, clases = clase, dias = dia, lugares = lugar)
       else:
          flash("The class have a School Hours")
-         return render_template("Asignaciones.html", docentes = docent, clases = clase, dias = dia, lugares = lugar)
+         return render_template("Asignaciones.html", xd = view ,docentes = docent, clases = clase, dias = dia, lugares = lugar)
     else:   
-      return render_template("Asignaciones.html", maestros = docent, dias = dia, lugares = lugar, clases = clase)
+      return render_template("Asignaciones.html",xd = view, maestros = docent, dias = dia, lugares = lugar, clases = clase)
 
 
 @app.route('/AgregarUbicaciones', methods=["GET", "POST"])
@@ -329,30 +349,33 @@ def asistencia():
          return render_template("uwu.html", dep = de)
 
 
-@app.route('/Asistencia', methods=["GET", "POST"])
-def asistenciauwu():
+@app.route('/Asistencia', methods=['GET','POST'])
+def asis():
     cursor = db.cursor()
-    global clasee
-    global horafinal
+    #variables obtenidas de Ajax
+    clase = request.args.get("clase")
     codigo = request.args.get("Codigo")
+    #Fecha actual
     fecha_actual = datetime.date.today()
+    
+    #Comprobando informacion
     print(fecha_actual)
     print(codigo)
-    if request.method=="POST":
-         if codigo is None:
-            
-            flash("Aun no hay Clases en Curso")
-            return render_template("qrscan.html", clase = clasee, final = horafinal)  
-         else:
-            cursor.execute("EXEC usp_Register_Attendance ?,?,?",(clasee,codigo,fecha_actual))
-            cursor.commit()
-            flash("Registro de Asistencia Exitoso")
-            cursor.close()
-            return render_template("qrscan.html", clase = clasee , final = horafinal)  
+    print(clase)
+    
+    #Verifica si hay una clase en curso
+    if clase is None:
+        flash("Aun no hay Clases en Curso")
+        return render_template("qrscan.html", xd = "", esta = "")  
     else:
-       return render_template("qrscan.html", clase = clasee , final = horafinal)      
-    
-    
+        Asistencia(fecha_actual,codigo,clase)
+        xd = cursor.execute("EXEC usp_ViewAsistencia ?,?",(clase,fecha_actual)).fetchall()
+        esta = cursor.execute("EXEC usp_Estadistica ?,?",(clase, fecha_actual)).fetchall()
+        flash("Registro de Asistencia Exitoso")
+        #Se cierra la conexion 
+        cursor.close()                 
+        return render_template("qrscan.html", xd = xd, esta = esta )
+
 
 #Region de Views o para Mostrar los Registros xd
 @app.route('/Alumnos', methods=["GET", "POST"])
@@ -388,6 +411,7 @@ def viewClass():
 
    Año = "SELECT Id,SchoolYearName FROM School_Year"
    row = cursor.execute(Año).fetchall()
+
    consulta = cursor.execute("EXEC usp_ViewMateria").fetchall()
 
    #Verificar si hay registros 
@@ -397,7 +421,7 @@ def viewClass():
 
    else:
       cursor.close()   
-      return render_template("materias.html", clases = consulta)
+      return render_template("materias.html", clases = consulta, carreras = rows , años = row)
 
 
 
@@ -552,6 +576,7 @@ def deletelugar(id):
 def deleteasig(id):
     cursor = db.cursor()
     query = cursor.execute("DELETE FROM Assignment WHERE Id = ?",(id))
+    query2 = cursor.execute("DELETE School_Hours WHERE Id=?",(id))
     cursor.commit()
     flash("Registro Eliminado")
     cursor.close()

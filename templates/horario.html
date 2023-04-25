@@ -1,23 +1,101 @@
 {%extends "layout.html"%}
 {%block main%}
 <div class="container-horario">
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-        </tbody>
-      </table>
+  <form action="/Horario" method="post">
+    <div class="combo">
+      <select class="form-select" id='combobox' name='Carrera' required="">
+          <option selected>Select Career</option>
+        {%for car in carreras%}
+        <option value="{{car[0]}}" {%if hr and hr[0][5] == car[0]%}selected{%endif%}>{{car[1]}}</option>
+        {%endfor%}
+    </select>
+    </div>
+    <div class="combo">
+      <select class="form-select" id='combobox' name='Año' required="">
+          <option selected>Select School Year</option>
+        {%for year in año%}
+        <option value="{{year[0]}}" {%if hr and hr[0][6] == year[0]%}selected{%endif%}>{{year[1]}}</option>
+        {%endfor%}
+    </select>
+    </div>
+    <button type="submit">Enviar</button>
+  </form>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #4c4eaf;
+      color: white;
+    }
+    
+    tr:nth-child(even) {background-color: #f2f2f2;}
+  </style>
+</head>
+<body>
+  <h1>Horario de Clases</h1>
+  
+  <table>
+    <tr>
+      <th>Hora</th>
+      <th>Lunes</th>
+      <th>Martes</th>
+      <th>Miércoles</th>
+      <th>Jueves</th>
+      <th>Viernes</th>
+      <th>Sábado</th>
+      <th>Domingo</th>
+    </tr>
+    {% for class in hr %}
+    <tr>
+      <td>{{ class[0] }} - {{ class[1] }}</td>
+      {% if class[7] == "Monday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Tuesday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Wednesday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Thursday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Friday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Saturday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      {% if class[7] == "Sunday" %}
+      <td>{{ class[2] }} - {{ class[3] }}<br>{{ class[4] }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
 </div>
+
 {%endblock%}

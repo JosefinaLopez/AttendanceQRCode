@@ -3,4 +3,4 @@ setInterval(function() {
         $('#hora_final').text('Finaliza a las ' + data.final);
         $('#clase_Actual').text(data.clase);
     });
-}, 5000);
+}, 10000);

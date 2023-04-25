@@ -59,17 +59,80 @@
       Student Code
       <h2 class="site-backdrop" style='padding:3%;'></h2>
       <button type="button" class="btn btn-primary" id='offcamara' style="left:4px;"><i class="bi bi-stop-circle-fill"></i>Turn off </button>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" id="open-modal" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Ver Asistencias
+      </button>
+
+<!-- Modal -->
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Registro de Asistencias</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope='col'>Fecha</th>
+              <th scope="col">Estudiante</th>
+              <th scope="col">Carnet</th>
+              <th scope="col">E-Mail</th>
+              <th scope='col'>Telefono</th>
+              <th scope='col'>Clase Asistida</th>
+              <th scope='col'>Profesor de Clase</th>
+              <th scope='col'>Update</th>
+              <th scope='col'>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {%for asi in xd%}
+              <th scope="row">{{asig[0]}}</th>
+              <td>{{asi[1]}}</td>
+              <td>{{asi[2]}}</td>
+              <td>{{asi[3]}}</td>
+              <td>{{asi[4]}}</td>
+              <td>{{asi[5]}}</td>
+              <td>{{asi[6]}}</td>
+              <td>
+                <a href="/EditarClase/{{asi[0]}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                  </svg>
+                </a>
+              </td>
+              <td>
+                <a href="/EliminarClase/{{asi[0]}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
     </div>
     <br>
     <div class="card border-info mb-3" style="max-width: 16rem;" id='card-clases'>
       <div class="card-body">
-        <h3>{{clase}}</h3>
-        <h5 style='color: red;'>Ends at {{final}}</h5>
+        <h3 id='clase_Actual'></h3>
+        <h5 style='color: red;' id='hora_final'></h5>
         <span><i class="bi bi-people-fill"></i>  0</span>
       </div>
     </div>
     </div>
-    
     <div class="user-info">
       <video id="preview" onclick='scanner.start()'></video>
     </div>
@@ -77,51 +140,6 @@
 <script type='text/javascript' src="/static/script/jquery.min.js"></script>
 <script type='text/javascript'  src="/static/script/instascan.min.js"></script>
 <script type='text/javascript'  src='/static/script/clock.js'></script>
-<script type='text/javascript'>
-var sound = new Audio("/static/barcode.wav")
-let scanner = new Instascan.Scanner({video:document.getElementById('preview')});
-var scanneroff = document.getElementById("offcamara");
-scanner.addListener('scan', function(content)
-{
-  sound.play();
-  $('.site-backdrop').html(content);
-
-  // Enviar `content` al servidor Flask
-  $.ajax({
-    url: '/Asistencia',
-    data: {
-      Codigo : content
-    } ,
-    success: function(response) {
-      //nose xd
-      console.log(response)
-    },
-    error: function(error) {
-      console.log(error);
-    }
-  });
-});
-
-Instascan.Camera.getCameras().then(function(cameras)
-{
-  if(cameras.length > 0)
-  {
-    scanner.start(cameras[0]);
-  }
-  else
-  {
-     console.error("la camara no funciona")
-  }
-}).catch(function(e)
-{
-  console.log(e);
-});
-
-scanneroff.onclick = function(cameras)
-{
-  scanner.stop(cameras[0]);
-}
-
-
-</script>
+<script src="/static/script/clase_actual.js"></script>
+<script type='text/javascript' src='/static/script/scn.js'></script>
 {%endblock%}

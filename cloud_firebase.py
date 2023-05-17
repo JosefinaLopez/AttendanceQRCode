@@ -47,9 +47,6 @@ def Link_Download(url):
   img.seek(0)
   return img
 
-
-
-
 def Download(img):
   ruta = "gs://project-qrimg.appspot.com/qr/ESTUD0001"
   url = storage.child(ruta).get_url(token=None)

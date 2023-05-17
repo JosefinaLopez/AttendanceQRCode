@@ -18,3 +18,9 @@ def Asistencia(fecha, codigo, clase):
     cursor.execute("EXEC usp_Register_Attendance ?,?,?",(str(fecha),str(codigo),str(clase)))
     cursor.commit()
     print("Funciono")
+    
+def MostrarAsistenciaActual(clase, fecha):
+    db = connection('JOSEFINALOPEZ','Student_Attendance')
+    cursor = db.cursor()
+    xd = cursor.execute("usp_ViewAsistencia ?,?", (str(clase),fecha)).fetchall()   
+    return xd

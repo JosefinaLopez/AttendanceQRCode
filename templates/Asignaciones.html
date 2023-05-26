@@ -23,44 +23,44 @@
             <form action="/RegistroAsignaciones" method="post">
               <select class="form-select" id='combobox' style='width: 55%;' name='Maestros' required="">
                 <option selected>Select the teach</option>
-                 {%for maestro in maestros%}
-                 <option value="{{maestro[0]}}"{%if edit[8]== maestro[0]%}selected{%endif%}>{{maestro[1]}}</option>
-                 {%endfor%}
+                {%for maestro in maestros%}
+                <option value="{{maestro[0]}}"{%if edit[8]== maestro[0]%}selected{%endif%}>{{maestro[1]}}</option>
+                {%endfor%}
                 </select>
   
                 <select class="form-select" id='combobox' style='width: 55%;' name='Clase_Id' required="">
                     <option selected>Select the class to teach</option>
-                     {%for clase in clases%}
-                     <option value="{{clase[0]}}"{%if edit[9]== clase[0]%}selected{%endif%}>{{clase[1]}}</option>
-                     {%endfor%}
+                    {%for clase in clases%}
+                    <option value="{{clase[0]}}"{%if edit[9]== clase[0]%}selected{%endif%}>{{clase[1]}}</option>
+                    {%endfor%}
                 </select>
                     <div class="hora">
                       <div class="horaInicio">
                         <label for="">Start Time</label>
                         <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;" 
-                               {% if edit %} value="{{edit[1]}}" {% endif %} />   
+                              {% if edit %} value="{{edit[1]}}" {% endif %} />   
                       </div>
                       <div class="horafinal">
                         <label for="">Final Time</label>
                         <input type="time" name="HoraFinal" style="border-radius: 30px;text-align: end;" 
-                               {% if edit %} value="{{edit[2]}}" {% endif %} />   
+                              {% if edit %} value="{{edit[2]}}" {% endif %} />   
                       </div>
                     </div> 
                     
                     <select class="form-select" id='combobox'  name='Dia_Id'style='position: relative; left:4rem'  required="">
-                     <option selected>Select a Day</option>
+                    <option selected>Select a Day</option>
                       {%for dia in dias%}
                       <option value="{{dia[0]}}" {%if edit[4]== dia[0]%}selected{%endif%} >{{dia[1]}}</option>
                       {%endfor%}
                     </select>
                     <select class="form-select" id='combobox'  name='Lugar_Id'style='position: relative; left:4rem'  required="">
-                     <option selected>Select a Place</option>
+                    <option selected>Select a Place</option>
                       {%for lugar in lugares%}
                       <option value="{{lugar[0]}}"{%if edit[5]== lugar[0]%}selected{%endif%} >{{lugar[1]}}</option>
                       {%endfor%}
                     </select>
                 
-                   <div class="botom">
+                  <div class="botom">
                     <button type='submit'class='btn btn-primary'>
                       Registrar
                     </button>
@@ -68,11 +68,11 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                       Ver Registros
                     </button>
-                   </div>
+                  </div>
                     
                 </div>
                   </form>
-         
+        
               <!-- Modal -->
               <div class="modal fade modal-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

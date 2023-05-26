@@ -10,9 +10,9 @@
 }
 body
 {
-  min-width: 100vh;
-  overflow-x: hidden;
-  height: 100vh;
+    min-width: 100vh;
+    overflow-x: hidden;
+    height: 100vh;
 }
 .container-nav{
     position: relative;
@@ -28,7 +28,7 @@ body
     overflow: hidden;
 }
 .navigation.active{
- width: 80px;
+    width: 80px;
 
 }
 .navigation ul{
@@ -65,7 +65,7 @@ body
 }
 .navigation ul li:hover a,
 .navigation ul li.hovered a{
- color: var(--black);
+    color: var(--black);
 }
 .navigation ul li a .icon{
     position: relative;
@@ -90,16 +90,16 @@ body
 .navigation ul li:hover a::before,
 .navigation ul li.hovered a::before
 {
- content: '';
- position: absolute;
- right: 0;
- width: 50px;
- height: 50px;
- top:-50px;
- border-radius: 50%;
- background: transparent;
- box-shadow: 35px 35px 0 10px var(--violet);
- pointer-events: none;
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    top:-50px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 35px 35px 0 10px var(--violet);
+    pointer-events: none;
 }
 .navigation ul li:hover a::after,
 .navigation ul li.hovered a::after
@@ -114,11 +114,11 @@ body
     border-radius: 50%;
     box-shadow: 35px -35px 0px 10px var(--violet);
     pointer-events: none;
-   
-   }
 
-   /*Main*/
-   .main{
+}
+
+/*Main*/
+.main{
     display: flex;
     flex-direction: column;
 
@@ -128,19 +128,19 @@ body
     min-height: 100vh;
     background: var(--violet);
     transition: 0.5s;
-   }
-   .main.active{
+}
+.main.active{
     width: calc(100% - 80px);
     left: 80px;
-   }
-   .topbar{
+}
+.topbar{
     width: 100%;
     height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-   }
-   .toggle{
+}
+.toggle{
     position: relative;
     top: 0;
     width: 60px;
@@ -150,17 +150,17 @@ body
     align-items: center;
     font-size: 2.5em;
     cursor: pointer;
-   }
-   .search{
+}
+.search{
     position: relative;
     margin: 0 10px;
 
-   }
-   .search label{
+}
+.search label{
     position: relative;
     width: 100%;
-   }
-   .search label input{
+}
+.search label input{
     width: 100%;
     height: 40px;
     border-radius: 40px;
@@ -169,8 +169,8 @@ body
     font-size: 18px;
     padding-right: 35px;
     border: 1px solid var(--black);
-   }
-   .search label button{
+}
+.search label button{
     position: absolute;
     top: 0px;
     right: 10px;
@@ -180,23 +180,22 @@ body
     border: none;
     width: 40px;
     border-radius: 30px;
-   }
-   .footer{
+}
+.footer{
     background-color: #212529;
-   }
-   .footer p{
+}
+.footer p{
     color: white;
     text-align: center;
     width: 100%;
     position: relative;
     top: 10px;
     height: 34px;
-   }
-   .content{
+}
+.content{
     background: #8688fe;
     padding: 10px;
     min-height: calc(100vh - 50px - 60px); /* ajustar la altura del topbar y del footer */
     margin: 0;
     padding: 0;
-   }
-  
+}

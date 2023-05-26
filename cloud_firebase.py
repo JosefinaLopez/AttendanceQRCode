@@ -33,8 +33,8 @@ def Send_QR(name_img, ruta):
     storage.child(f"qr/{name_img}").put(ruta)
 
 def Link_Img(name_img):
- url = storage.child(f"qr/{name_img}").get_url(None)
- return url
+  url = storage.child(f"qr/{name_img}").get_url(None)
+  return url
 
 #Es este
 def Link_Download(url):

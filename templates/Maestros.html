@@ -5,27 +5,27 @@
   <div class="result-container">
     <div class="container-card">
         {%if query == 1%}
-       <div class="card-resul">
-       <div class="image">
-         <img src="{{Info[5]}}" alt="Código QR" id="uwu">
-         <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
-       </div>
-       <div class="info-containere">
-         <ul class="info">
-           <li>
-             <h5>Teacher Name</h5>
-             <span><h4>{{Info[1]}}</h4></span>
-           </li>
-           <li> 
+      <div class="card-resul">
+      <div class="image">
+        <img src="{{Info[5]}}" alt="Código QR" id="uwu">
+        <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
+      </div>
+      <div class="info-containere">
+        <ul class="info">
+          <li>
+            <h5>Teacher Name</h5>
+            <span><h4>{{Info[1]}}</h4></span>
+          </li>
+          <li> 
             <h5>Class to be Taught</h5>
             <span><h4>{{Info[8]}}</h4></span>
           </li>
-           <li>
-             <h5>Departament</h5>
-             <span><h4>{{Info[6]}}</h4></span>
-           </li>
-         </ul>
-         <ul class="info xd">
+          <li>
+            <h5>Departament</h5>
+            <span><h4>{{Info[6]}}</h4></span>
+          </li>
+        </ul>
+        <ul class="info xd">
           <li>
           <h5>Phone</h5>
           <span><h4>{{Info[4]}}</h4></span>
@@ -38,16 +38,16 @@
           <a href="/EditarDocente/{{Info[0]}}">Edit</a>        
           <a href="/EliminarDocente/{{Info[0]}}" style='background-color: red;'>Delete</a>
           </div>
-         </ul>
-       </div>
-       <span class="carnet">{{Info[0]}}</span>
-       </div>
-       {%else%}
-       {%for Info in Info%}
-       <div class="card-resul">
-         <div class="image">
-           <img src="{{Info[5]}}" alt="Código QR" id="uwu">
-           <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
+        </ul>
+      </div>
+      <span class="carnet">{{Info[0]}}</span>
+      </div>
+      {%else%}
+      {%for Info in Info%}
+      <div class="card-resul">
+        <div class="image">
+          <img src="{{Info[5]}}" alt="Código QR" id="uwu">
+          <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
           </div>
           <div class="info-containere">
             <ul class="info">
@@ -59,7 +59,7 @@
                 <h5>Class to be Taught</h5>
                 <span><h4>{{Info[8]}}</h4></span>
               </li>
-         
+        
             <li> 
               <h5>Departament</h5>
               <span><h4>{{Info[6]}}</h4></span>
@@ -83,9 +83,9 @@
         <span class="carnet">{{Info[0]}}</span>
       </div>
       {%endfor%}
-       {%endif%}
-     </div>
-     <div class="optionsuwu">
+      {%endif%}
+    </div>
+    <div class="optionsuwu">
       <h1>Teacher Registration</h1>
       <form action="/RegistroDocentes" method="post">
           <div class="container-stu">
@@ -93,16 +93,16 @@
               <input type="text" class="input" name='Nombre' placeholder='Name' value="{{edit[2] if edit else ''}}" required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Correo' placeholder='E-mail' value="{{edit[4] if edit else ''}}" required="">
+              <input type="text" class="input" name='Correo' placeholder='E-mail' value="{{edit[3] if edit else ''}}" required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Telefono' placeholder='Phone' value="{{edit[5] if edit else ''}}" required="">
+              <input type="text" class="input" name='Telefono' placeholder='Phone' value="{{edit[4] if edit else ''}}" required="">
             </div>
             <div class="combo">
               <select class="form-select" id='combobox' name='Genero' required>
                 <option selected>Select Gender</option>
                 {%for gender in generos%}
-                <option value="{{gender[0]}}" {%if edit and edit[5] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
+                <option value="{{gender[0]}}" {%if edit and edit[7] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
                 {%endfor%}
               </select>
             </div>
@@ -110,7 +110,7 @@
               <select class="form-select" id='combobox' name='Departamento' required="">
                   <option selected>Select your department</option>
                 {%for dep in dep%}
-                <option value="{{dep[0]}}" {%if edit and edit[7] == dep[0]%}selected{%endif%}>{{dep[1]}}</option>
+                <option value="{{dep[0]}}" {%if edit and edit[6] == dep[0]%}selected{%endif%}>{{dep[1]}}</option>
                 {%endfor%}
             </select>
             </div>
@@ -123,7 +123,7 @@
 
         </div>
     </form>
-     </div>
+    </div>
   </div>
   
 </main>

@@ -85,30 +85,30 @@
       <div class="optionsuwu">
         <form action="/RegistroClases" method="post">
           <h1>{{'Update Class ' if edit else 'Register Class'}}</h1>
-             <div class="xd" style='margin:0 auto; width: 300px;'>
-                 <input type="text" class="input" name='Nombre' value="{{edit[2] if edit else ''}}" style='width:320px;' required title="Provide a Class">
-               </div>
+            <div class="xd" style='margin:0 auto; width: 300px;'>
+                <input type="text" class="input" name='Nombre' value="{{edit[2] if edit else ''}}" style='width:320px;' required title="Provide a Class">
+              </div>
                     
-               <select class="form-select" id='combobox' name='Carrera_Id' required title="Select Your Career">
-                   <option selected>Select a career</option>
-                 {%for carrera in carreras%}
-                 <option value="{{carrera[0]}}"{%if edit and edit[3]==carrera[0]%}selected{%endif%}>{{carrera[1]}}</option>
-                 {%endfor%}
-             </select>
+              <select class="form-select" id='combobox' name='Carrera_Id' required title="Select Your Career">
+                  <option selected>Select a career</option>
+                {%for carrera in carreras%}
+                <option value="{{carrera[0]}}"{%if edit and edit[3]==carrera[0]%}selected{%endif%}>{{carrera[1]}}</option>
+                {%endfor%}
+            </select>
               <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
-               <option selected>Select a academic year</option>
+              <option selected>Select a academic year</option>
                 {%for Año in años%}
                 <option value="{{Año[0]}}" {%if edit and edit[4] == Año[0]%}selected{%endif%}>{{Año[1]}}</option>
                 {%endfor%}
-               </select>
+              </select>
 
-             <div class="botom">
+            <div class="botom">
               <input type="hidden" name="Codigo" value="{{ edit[1] if edit else '' }}">
-                 <button type='submit' id='btn' class='btn'>
+                <button type='submit' id='btn' class='btn'>
                   {{'Update' if edit else 'Register'}}
                 </button>
-             </div>
-         </form>
+            </div>
+        </form>
       </div>
   </div>
 </main>

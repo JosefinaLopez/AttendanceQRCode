@@ -128,8 +128,7 @@ font-size: medium;
   display: flex;
   justify-content: center;
   margin-top: 5%;
-  max-width: 65%;
- 
+  max-width: 65%; 
 }
 .img-QR{
   margin-top: 4rem;
@@ -170,12 +169,10 @@ font-size: medium;
   background-color: white;
   transform: scale(1.05);
   box-shadow: 13px 13px 100px #969696,
-             -13px -13px 100px #ffffff;
+          -13px -13px 100px #ffffff;
 }
   /*Boton*/
   #btn {
-  
-   
     padding: 0.5em 1.9em;
     font-size: 16px;
     border: none;
@@ -184,13 +181,11 @@ font-size: medium;
     cursor: pointer;
     position: relative;
     z-index: 1;
-   }
-   
-   #btn:hover {
+  } 
+  #btn:hover {
     color: rgb(255, 255, 255);
-   }
-   
-   #btn::before,#btn::after {
+  } 
+  #btn::before,#btn::after {
     content: "";
     border-radius: 10px;
     position: absolute;
@@ -202,31 +197,28 @@ font-size: medium;
     backdrop-filter: blur(10px);
     z-index: -1;
     transition: all 0.4s;
-   }
-   
-   #btn::after {
+  }
+  #btn::after {
     z-index: -2;
     transition: all 0.4s;
-   }
-   
-   #btn:hover::before {
+  } 
+  #btn:hover::before {
     background: rgb(0, 0, 0, 0.315);
     border-radius: 10px;
-   }
-   
-   #btn:hover::after {
+  }
+  #btn:hover::after {
     background: linear-gradient(to right, #cb6ce6, #38b6ff);
     border-radius: 10px;
     transform: scale(1.07, 1.2) rotateX(180deg);
-   }
+  }
 
-   /*Scanner*/
-   #scanner-container {
+  /*Scanner*/
+  #scanner-container {
     position: relative;
     width: 320px;
     height: 240px;
   }
- #preview{
+  #preview{
     display: flex;
     position: relative;
     bottom: -5rem;
@@ -234,8 +226,7 @@ font-size: medium;
     max-width: 180vh;
     border-radius: 30px;
     background-color: rgba(52, 189, 231, 0.322);
-
- } 
+} 
   #qr-canvas {
     display: none;
   }
@@ -281,18 +272,17 @@ font-size: medium;
     text-align: center;
     border-radius: 30px;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-   }
-   .img-container{
-     width: 300px;
-     height: 300px;
-     border-radius: 30px;
-     padding: 3px;
-   }
-   .info-container, .img-container{
-     box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.75);
-     
-   }
-   .card-container{
+  }
+  .img-container{
+    width: 300px;
+    height: 300px;
+    border-radius: 30px;
+    padding: 3px;
+  }
+  .info-container, .img-container{
+    box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.75);
+  }
+  .card-container{
     background-color: white;
     box-shadow: 0px 9px 33px 4px rgba(21,29,235,0.83);
     transition: all 400ms ease;
@@ -300,14 +290,13 @@ font-size: medium;
     display: grid;
     border-radius: 15px;
     grid-template-columns:300px 400px;
-    gap: 15px;
-     
+    gap: 15px;   
   }
   h1 {
     text-align: center;
   }
   .label {
-   color: blue;
+    color: blue;
   
   }
   /*Parte del login y register*/

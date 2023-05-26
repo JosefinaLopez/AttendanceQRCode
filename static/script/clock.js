@@ -13,7 +13,7 @@ function clock() {
     var time = h + ':' + (M < 10 ? '0' : '') + M +" "+ amp;
     //Se agrega al elemento con id 'clock'
     document.getElementById('clock').innerHTML = time;
-     
+    
     //Para usarla , la variable se envia al index 
     $.ajax({
         url: '/',

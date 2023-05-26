@@ -76,7 +76,7 @@
                 <div class="toggle">
                     <i class="bi bi-list"></i>
                 </div>
-                 <!-- Search -->
+                <!-- Search -->
                 <form action='/Search' method='POST'>
                     <div class="search">
                         <label>
@@ -92,16 +92,16 @@
                 {% if get_flashed_messages() %}
                 <div class="alert alert-primary border text-center alert-dismissible" role="alert"> 
                 {{ get_flashed_messages() | join(" ")}}
-                  <div class="btn-alert">
+                <div class="btn-alert">
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
-                  </div>
+                </div>
                 </div>
                 {% endif %}
                 {%block main%}
                 {%endblock%}
             </section>
             <footer class='footer'>
-              <p>&copy; SkyTech 2023</p>
+            <p>&copy; SkyTech 2023</p>
             </footer>
         </div>
     </div>

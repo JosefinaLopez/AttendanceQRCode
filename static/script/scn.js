@@ -16,25 +16,25 @@ function startCamera() {
     console.log(e);
   });
 }
-
 // Función para detener la cámara
 function stopCamera() {
   scanner.stop();
   // Activa el botón de inicio de cámara
-  document.getElementById("start-camera-btn").disabled = false;
-  // Desactiva el botón de apagado de cámara
-  scanneroff.disabled = true;
+  document.getElementById("oncamera").disabled = false;
 };
 
 // Verifica la información de la clase actual antes de activar la cámara
 $.getJSON('/horario_actual', function(data) {
   // Verifica si la información de la clase actual no es null
-  if (data.clase !== "Aún no hay") {
+  if (data.clase != "Aún no hay") {
     // Activa la cámara
     startCamera();
+    console.log("XDD");
+  
   }
   else{
-     console.log("Puede registrar su Asistencia");
+    console.log("No puede registrar Asistencia");
+    stopCamera();
   }
 });
 

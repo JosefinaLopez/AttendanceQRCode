@@ -5,32 +5,32 @@
   <div class="result-container">
     <div class="container-card">
         {%if query == 1%}
-       <div class="card-resul">
-       <div class="image">
-         <img src="{{Info[6]}}" alt="Código QR" id="uwu">
-         <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
-       </div>
-       <div class="info-containere">
-         <ul class="info">
-           <li>
-             <h5>Student Name</h5>
-             <span><h4>{{Info[1]}}</h4></span>
-           </li>
-           <li>
-             <h5>Carnet</h5>
-             <span><h4>{{Info[2]}}</h4></span>
-           </li>
-           <li> 
-             <h5>Career</h5>
-             <span><h4>{{Info[7]}}</h4></span>
-           </li>
-           <li>
-             <h5>Year</h5>
-             <span><h4>{{Info[8]}}</h4></span>
-           </li>
+      <div class="card-resul">
+      <div class="image">
+        <img src="{{Info[6]}}" alt="Código QR" id="uwu">
+        <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
+      </div>
+      <div class="info-containere">
+        <ul class="info">
+          <li>
+            <h5>Student Name</h5>
+            <span><h4>{{Info[1]}}</h4></span>
+          </li>
+          <li>
+            <h5>Carnet</h5>
+            <span><h4>{{Info[2]}}</h4></span>
+          </li>
+          <li> 
+            <h5>Career</h5>
+            <span><h4>{{Info[7]}}</h4></span>
+          </li>
+          <li>
+            <h5>Year</h5>
+            <span><h4>{{Info[8]}}</h4></span>
+          </li>
           
-         </ul>
-         <ul class="info xd">
+        </ul>
+        <ul class="info xd">
           <li>
           <h5>Phone</h5>
           <span><h4>{{Info[5]}}</h4></span>
@@ -43,13 +43,13 @@
           <a href="#">Edit</a>      
           <a href="/EliminarAlumno/{{Info[0]}}" style='background-color: red;'>Delete</a>
           </div>
-         </ul>
-       </div>
-       <span class="carnet">{{Info[0]}}</span>
-       </div>
-       {%else%}
-       {%for Info in Info%}
-       <div class="card-resul">
+        </ul>
+      </div>
+      <span class="carnet">{{Info[0]}}</span>
+      </div>
+      {%else%}
+      {%for Info in Info%}
+      <div class="card-resul">
         <div class="image">
           <img src="{{Info[6]}}" alt="Código QR" id="uwu">
           <a href="/Imagen/{{Info[0]}}" download='{{Info[0]}}.png'>Download</a>
@@ -72,33 +72,33 @@
               <h5>Year</h5>
               <span><h4>{{Info[8]}}</h4></span>
             </li>
-           
+          
           </ul>
           <ul class="info xd">
             <li>
               <h5>Gender</h5>
               <span><h4>{{Info[3]}}</h4></span>
             </li>
-           <li>
-           <h5>Phone</h5>
-           <span><h4>{{Info[5]}}</h4></span>
-           </li>
-           <li>
-           <h5>E-Mail</h5>
-           <span><h4>{{Info[4]}}</h4></span>
-           </li>
-           <div class="lef">
-           <a href="/EditarAlumno/{{Info[0]}}">Edit</a>        
-           <a href="/EliminarAlumno/{{Info[0]}}" style='background-color: red;'>Delete</a>
-           </div>
+          <li>
+          <h5>Phone</h5>
+          <span><h4>{{Info[5]}}</h4></span>
+          </li>
+          <li>
+          <h5>E-Mail</h5>
+          <span><h4>{{Info[4]}}</h4></span>
+          </li>
+          <div class="lef">
+          <a href="/EditarAlumno/{{Info[0]}}">Edit</a>        
+          <a href="/EliminarAlumno/{{Info[0]}}" style='background-color: red;'>Delete</a>
+          </div>
           </ul>
         </div>
         <span class="carnet">{{Info[0]}}</span>
         </div>
         {%endfor%}
-       {%endif%}
-     </div>
-     <div class="optionsuwu">
+      {%endif%}
+    </div>
+    <div class="optionsuwu">
       <h1>Student Registration</h1>
       <form action="/RegistroAlumno" method="post">
           <div class="container-stu">
@@ -109,16 +109,16 @@
               <input type="text" class="input" name='Carnet' value="{{edit[3] if edit else ''}}" placeholder='Carnet' required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Correo' value="{{edit[5] if edit else ''}}" placeholder='Correo' required="">
+              <input type="text" class="input" name='Correo' value="{{edit[4] if edit else ''}}" placeholder='Correo' required="">
             </div>
             <div class="xd">
-              <input type="text" class="input" name='Telefono' value="{{edit[6] if edit else ''}}" placeholder='Telefono' required="">
+              <input type="text" class="input" name='Telefono' value="{{edit[5] if edit else ''}}" placeholder='Telefono' required="">
             </div>
             <div class="combo">
               <select class="form-select" id='combobox' name='Genero' required>
                 <option selected>Select Gender</option>
                 {%for gender in generos%}
-                <option value="{{gender[0]}}" {%if edit and edit[5] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
+                <option value="{{gender[0]}}" {%if edit and edit[7] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
                 {%endfor%}
               </select>
             </div>
@@ -130,24 +130,24 @@
                 {%endfor%}
             </select>
             </div>
-             <div class="combo">
-               <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
+            <div class="combo">
+              <select class="form-select" id='combobox' style='width: 55%;' name='Año' required="">
                 <option selected>Select a academic year</option>
-                 {%for Año in Años%}
-                 <option value="{{Año[0]}}" {%if edit and edit[9] == Año[0]%}selected{%endif%}>{{Año[1]}}</option>
-                 {%endfor%}
+                {%for Año in Años%}
+                <option value="{{Año[0]}}" {%if edit and edit[8] == Año[0]%}selected{%endif%}>{{Año[1]}}</option>
+                {%endfor%}
                 </select>
-             </div>
-             <div class="botom">
+            </div>
+            <div class="botom">
               <input type="hidden" name="Codigo" value="{{ edit[1] if edit else '' }}">
-             <button type='submit'class='btn' id='btn'>
-             {{'Update' if edit else 'Register'}}
+            <button type='submit'class='btn' id='btn'>
+            {{'Update' if edit else 'Register'}}
             </button>
             </div>
 
         </div>
     </form>
-     </div>
+    </div>
   </div>
   
 </main>

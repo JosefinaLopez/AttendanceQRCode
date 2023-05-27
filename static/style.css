@@ -224,7 +224,8 @@ font-size: medium;
     bottom: -5rem;
     left: 2px;
     max-width: 180vh;
-    border-radius: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
     background-color: rgba(52, 189, 231, 0.322);
 } 
   #qr-canvas {

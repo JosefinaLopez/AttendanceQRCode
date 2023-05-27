@@ -359,16 +359,15 @@ def asis():
    
    #Verifica si hay una clase en curso
    if clase is None:
-      flash("Aun no hay Clases en Curso")
       return render_template("qrscan.html", xd = "Nada", esta = "")  
    else:
-      esta = cursor.execute("EXEC usp_Estadistica ?,?",(clase, fecha_actual)).fetchall()
-      xd = MostrarAsistenciaActual(fecha_actual,clase)
+      #esta = cursor.execute("EXEC usp_Estatistica ?,?",(str(clase), str(fecha_actual))).fetchall()
       Asistencia(fecha_actual,codigo,clase)
+      xd = MostrarAsistenciaActual(clase,fecha_actual)
       cursor.close()                 
       #Se cierra la conexion 
       flash("Registro de Asistencia Exitoso")
-      return render_template("qrscan.html", xd = xd, esta = esta )
+      return render_template("qrscan.html", xd = xd, esta = 5)
 
 
 #Region de Views o para Mostrar los Registros xd
@@ -688,7 +687,7 @@ def login():
 def register():
       cursor = db.cursor()
       roles = cursor.execute("SELECT Id, Rolename FROM Roles").fetchall()
-      print(roles)
+      #print(roles)
 
       if request.method == "POST":
          username = request.form.get("Username")
@@ -696,9 +695,9 @@ def register():
          rol = request.form.get("Rol")
          confirm = request.form.get("Password-Confirm")
 
-      hash = generate_password_hash(password)
+         hash = generate_password_hash(password)
 
-      verificar = cursor.execute("SELECT *FROM Users WHERE username = ?",(username)).fetchone()
+         verificar = cursor.execute("SELECT *FROM Users WHERE username = ?",(username)).fetchone()
 
       if verificar is None:
          cursor.execute("INSERT INTO Users (Username, Password, Roles_Id) VALUES(?,?,?)",(username,hash,rol))

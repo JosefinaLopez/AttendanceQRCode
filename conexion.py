@@ -22,5 +22,5 @@ def Asistencia(fecha, codigo, clase):
 def MostrarAsistenciaActual(clase, fecha):
     db = connection('JOSEFINALOPEZ','Student_Attendance')
     cursor = db.cursor()
-    xd = cursor.execute("usp_ViewAsistencia ?,?", (str(clase),fecha)).fetchall()   
+    xd = cursor.execute("EXEC usp_ViewAsistencia ?,?", (str(clase),str(fecha))).fetchall()   
     return xd

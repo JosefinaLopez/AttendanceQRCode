@@ -61,7 +61,7 @@ body
     width: 100%;
     display: flex;
     text-decoration: none;
-    color: var(--violet);
+    color: var(--white);
 }
 .navigation ul li:hover a,
 .navigation ul li.hovered a{
@@ -181,9 +181,7 @@ body
     width: 40px;
     border-radius: 30px;
 }
-.footer{
-    background-color: #212529;
-}
+
 .footer p{
     color: white;
     text-align: center;

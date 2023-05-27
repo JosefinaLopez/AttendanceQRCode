@@ -22,7 +22,7 @@
   height: 80%;
   box-shadow: 5px 10px 2px 1px rgba(12, 12, 12, 0.2);
 }
- 
+
 #card-clases{
   justify-content: center;
   height: 11rem;
@@ -58,8 +58,8 @@
     <div class="card-content">
       Student Code
       <h2 class="site-backdrop" style='padding:3%;'></h2>
-      <button type="button" class="btn btn-dark" id='offcamara' style="left:4px;">Off</button>
-      <button type='button' class='btn btn-dark' id="oncamera" style='left:4px;'>On</button>
+      <button type='button' class='btn btn-dark' id="oncamera" style='left:4px;'><i class="bi bi-camera-video-fill"></i></button>
+      <button type="button" class="btn btn-dark" id='offcamara' style="left:4px;"><i class="bi bi-camera-video-off-fill"></i></button>
     </div>
     <br>
     <div class="card border-dark mb-3" style="max-width: 16rem;" id='card-clases'>
@@ -84,24 +84,29 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Estudiante</th>
+                  <th scope="col">Carnet</th>
+                  <th scope='col'>E-Mail</th>
+                  <th scope='col'>Telefono</th>
                 </tr>
               </thead>
               <tbody>
+                {%for a in xd%}
                 <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+                  <th scope="row">{{a[0]}}</th>
+                  <td>{{a[1]}}</td>
+                  <td>{{a[2]}}</td>
+                  <td>{{a[3]}}</td>
+                  <td>{{a[4]}}</td>
+                  <td>{{a[5]}}</td>
                 </tr>
+                {%endfor%}
               </tbody>
             </table>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ function stopCamera() {
   document.getElementById("oncamera").disabled = false;
 };
 
-// Verifica la información de la clase actual antes de activar la cámara
+/* Verifica la información de la clase actual antes de activar la cámara
 $.getJSON('/horario_actual', function(data) {
   // Verifica si la información de la clase actual no es null
   if (data.clase != "Aún no hay") {
@@ -36,7 +36,7 @@ $.getJSON('/horario_actual', function(data) {
     console.log("No puede registrar Asistencia");
     stopCamera();
   }
-});
+});*/
 
 scanner.addListener('scan', function(content) {
   sound.play();
@@ -44,7 +44,6 @@ scanner.addListener('scan', function(content) {
 
   // Obtiene información del horario actual antes de enviar la solicitud Ajax
   $.getJSON('/horario_actual', function(data) {
-
     // Incluye la información del horario actual y código escaneado en los datos del Ajax
     $.ajax({
       url: '/Asistencia',

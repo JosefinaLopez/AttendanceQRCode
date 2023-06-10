@@ -11,13 +11,14 @@ from cloud_firebase import Send_QR, Link_Img,Link_Download
 
 app = Flask(__name__)
 
-db = connection('JOSEFINALOPEZ','Student_Attendance')
+db = connection('JOSEFINALOPEZ\JOSEFINALOPEZ','Student_Attendance')
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
+#? Idea a implementar, en ves de que la bd este consultando cada minuto, y evitar el gasto de recursos
+#? hacer una cola que guarde los eventos y luego que solo se muestre y comparen
 @app.route('/', methods=['GET'])
 def index():
    return render_template("index.html")
@@ -38,6 +39,8 @@ def horario_actual():
    info = cursor.execute("EXEC usp_InfoIndex ?,?", (dia_actual, hora_actual)).fetchall()
    clase_actual = None
    final_actual = None
+   #!Nueva linea agregada, si da error , comentar 
+   #cursor.close()
    if len(info) !=0 :
    
       for clase, inicio, final in info:
@@ -699,14 +702,14 @@ def register():
 
          verificar = cursor.execute("SELECT *FROM Users WHERE username = ?",(username)).fetchone()
 
-      if verificar is None:
-         cursor.execute("INSERT INTO Users (Username, Password, Roles_Id) VALUES(?,?,?)",(username,hash,rol))
-         cursor.commit()
-         flash("Usuario Registrado Exitosamente")
-         return render_template("Login.html", roles = roles)
-      else:
-         flash("Usuario Existente")   
-         return render_template("Register.html", roles = roles)
+         if verificar is None:
+            cursor.execute("INSERT INTO Users (Username, Password, Roles_Id) VALUES(?,?,?)",(username,hash,rol))
+            cursor.commit()
+            flash("Usuario Registrado Exitosamente")
+            return render_template("Login.html", roles = roles)
+         else:
+            flash("Usuario Existente")   
+            return render_template("Register.html", roles = roles)
       return render_template("Register.html" , roles = roles)
 
 

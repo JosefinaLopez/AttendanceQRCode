@@ -221,9 +221,9 @@ font-size: medium;
   #preview{
     display: flex;
     position: relative;
-    bottom: -5rem;
+    bottom: -3rem;
     left: 2px;
-    max-width: 180vh;
+    max-width: 100vh;
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
     background-color: rgba(52, 189, 231, 0.322);

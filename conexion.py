@@ -10,7 +10,7 @@ def connection(server, bd):
     return conn 
 
 def Asistencia(fecha, codigo, clase):
-    db = connection('JOSEFINALOPEZ', 'Student_Attendance')
+    db = connection('JOSEFINALOPEZ\JOSEFINALOPEZ', 'Student_Attendance')
     cursor = db.cursor()
     print(codigo)
     print(fecha)
@@ -20,7 +20,7 @@ def Asistencia(fecha, codigo, clase):
     print("Funciono")
     
 def MostrarAsistenciaActual(clase, fecha):
-    db = connection('JOSEFINALOPEZ','Student_Attendance')
+    db = connection('JOSEFINALOPEZ\JOSEFINALOPEZ','Student_Attendance')
     cursor = db.cursor()
     xd = cursor.execute("EXEC usp_ViewAsistencia ?,?", (str(clase),str(fecha))).fetchall()   
     return xd

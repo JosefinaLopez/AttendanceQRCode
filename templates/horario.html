@@ -2,7 +2,7 @@
 {%block main%}
 <div class="container-horario">
   <div class="container-InfHorario">
-    <h3>Informacion de Carrera</h3>
+      <h3 style='text-align:center;'>Horario de Clases</h3>
     <form action="/Horario" method="post">
       <div class="combo">
         <select class="form-select" id='combobox' name='Carrera' required="">
@@ -61,6 +61,9 @@
     }
     #btn{
       margin-left: 50px;
+    }
+    h3, h1{
+      color: white;
     }
     
     tr:nth-child(even) {background-color: #f2f2f2;}

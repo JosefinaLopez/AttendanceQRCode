@@ -34,18 +34,31 @@
                     <option value="{{clase[0]}}"{%if edit[9]== clase[0]%}selected{%endif%}>{{clase[1]}}</option>
                     {%endfor%}
                 </select>
+                  {%if edit != "XD"%}
+              
                     <div class="hora">
                       <div class="horaInicio">
                         <label for="">Start Time</label>
-                        <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;" 
-                              {% if edit %} value="{{edit[1]}}" {% endif %} />   
+                        <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;" {% if edit != "XD" %} value="{{ hr[1] }}"
+                        {% endif %}/>
                       </div>
                       <div class="horafinal">
                         <label for="">Final Time</label>
                         <input type="time" name="HoraFinal" style="border-radius: 30px;text-align: end;" 
-                              {% if edit %} value="{{edit[2]}}" {% endif %} />   
+                              {% if edit != "XD" %} value="{{hr[2]}}"{% endif %} />   
+                        
                       </div>
                     </div> 
+                    {% else %}
+                      <div class="hora">
+                      <div class="horaInicio">
+                        <label for="">Start Time</label>
+                        <input type="time" name="HoraInicio" style="border-radius: 30px;text-align: end;"/>
+                      </div>
+                      <div class="horafinal">
+                        <label for="">Final Time</label>
+                        <input type="time" name="HoraFinal" style="border-radius: 30px;text-align: end;" />   
+                    {%endif%}
                     
                     <select class="form-select" id='combobox'  name='Dia_Id'style='position: relative; left:4rem'  required="">
                     <option selected>Select a Day</option>
@@ -62,7 +75,11 @@
                 
                   <div class="botom">
                     <button type='submit'class='btn btn-primary'>
+                      {%if edit != "XD"%}
+                        Editar
+                      {%else%}
                       Registrar
+                      {%endif%}
                     </button>
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">

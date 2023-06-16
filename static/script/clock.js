@@ -10,13 +10,12 @@ function clock() {
     h = h ? h : 12;
 
     //En base a eso se crea una cade con el formato 3:30 PM
-    var time = h + ':' + (M < 10 ? '0' : '') + M +" "+ amp;
-    //Se agrega al elemento con id 'clock'
+    var time = H + ':' + (M < 10 ? '0' : '') + M +':' +S;    //Se agrega al elemento con id 'clock'
     document.getElementById('clock').innerHTML = time;
     
     //Para usarla , la variable se envia al index 
     $.ajax({
-        url: '/',
+        url: '/horario_actual',
         data: {
             time: time
         },
@@ -30,4 +29,4 @@ function clock() {
 clock();
 
 // Actualizar la hora cada minuto
-setInterval(clock, 60000);
+setInterval(clock, 20000);

@@ -58,6 +58,7 @@
     <div class="card-content">
       Student Code
       <h2 class="site-backdrop" style='padding:3%;'></h2>
+      <h2 id='confirm'></h2>
       <button type='button' class='btn btn-dark' id="oncamera" style='left:4px;'><i class="bi bi-camera-video-fill"></i></button>
       <button type="button" class="btn btn-dark" id='offcamara' style="left:4px;"><i class="bi bi-camera-video-off-fill"></i></button>
     </div>
@@ -80,7 +81,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <table class="table table-dark table-hover">
+            <table class="table table-dark table-hover" id='tabla'>
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -92,16 +93,10 @@
                 </tr>
               </thead>
               <tbody>
-                {%for a in xd%}
                 <tr>
-                  <th scope="row">{{a[0]}}</th>
-                  <td>{{a[1]}}</td>
-                  <td>{{a[2]}}</td>
-                  <td>{{a[3]}}</td>
-                  <td>{{a[4]}}</td>
-                  <td>{{a[5]}}</td>
+                  <th scope="row"></th>
+                  <td></td>
                 </tr>
-                {%endfor%}
               </tbody>
             </table>
           </div>

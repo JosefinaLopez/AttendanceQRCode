@@ -2,87 +2,59 @@ from os import remove
 from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
-import datetime
+import datetime 
 from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
-from conexion import connection , Asistencia, MostrarAsistenciaActual
+from conexion import connection 
+from function_attendance import Asistencia, viewasis
+from prueba import code
+from helps import login_required
+from fuction_event import ColaEventos,CompararEvento
 from cloud_firebase import Send_QR, Link_Img,Link_Download
 
 app = Flask(__name__)
 
 db = connection('JOSEFINALOPEZ\JOSEFINALOPEZ','Student_Attendance')
+cursor = db.cursor()
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-#? Idea a implementar, en ves de que la bd este consultando cada minuto, y evitar el gasto de recursos
+#? Idea a implementar = en cambio de que la bd este consultando el evento, cada minuto, debo evitar el gasto de recursos
 #? hacer una cola que guarde los eventos y luego que solo se muestre y comparen
+
 @app.route('/', methods=['GET'])
 def index():
    return render_template("index.html")
 
 @app.route('/horario_actual', methods=['GET'])
 def horario_actual():
-   hora_actual = request.args.get('time', '')
-   dia_actual = datetime.datetime.now().strftime("%A")
-   cursor = db.cursor()
-
-   now = datetime.datetime.now()
-   current_time = now.strftime("%I:%M%p")
-
-   if hora_actual is None or len(hora_actual) == 0:
-      hora_actual = current_time
-   else:
-      hora_actual = hora_actual    
-   info = cursor.execute("EXEC usp_InfoIndex ?,?", (dia_actual, hora_actual)).fetchall()
-   clase_actual = None
-   final_actual = None
-   #!Nueva linea agregada, si da error , comentar 
-   #cursor.close()
-   if len(info) !=0 :
-   
-      for clase, inicio, final in info:
-         clase_actual = clase
-         final_actual = final
-         cursor.close()
-      if clase_actual is not None:
-         return jsonify({'clase': clase_actual, 'final': final_actual})
-      else:
-         return jsonify({'clase': 'Aún no hay', 'final': '00:00'})
-   cursor.close()
-   return jsonify({'clase': 'Aún no hay', 'final': '00:00'})
-
+   hora_actual = request.args.get('time','')
+   if hora_actual == '':
+      # Obtener la hora actual
+      hora_a = datetime.datetime.now()
+      # Extraer la hora, minutos y segundos
+      hora = hora_a.strftime("%H")
+      minutos = hora_a.strftime("%M")
+      segundos = hora_a.strftime("%S")
+      # Concatenarlos en una cadena
+      hora_actual = hora + ":" + minutos + ":" + segundos
+   #print(hora_actual)
+   #TODO: Cambios Aqui
+   return CompararEvento(hora_actual)
 
 @app.route("/RegistroAlumno",methods=["GET","POST"])
 def registerA():
 
-   cursor = db.cursor()
-      
+   cursor = db.cursor()     
    #Obtiene el ultimo Id Registrado y le suma una 
    comprobar_code = "SELECT MAX(Id) FROM Students"
    code_id = cursor.execute(comprobar_code).fetchone()[0]
-   print(code_id)
 
-   code = 0
-   if code_id is None:
-      code = 1
-      codigo = f"STUDNT0001"
-   else:
-      code = code_id+1
-   #print(code)
-   #ESTU0001    
-   if code < 10:
-      codigo = f"STUDNT000{code}"
-   elif code < 100:
-   #ESTU099
-      codigo = f"STUDNT00{code}"
-   #ESTU999
-   elif code < 1000:
-      codigo = f"STUDNT0{code}" 
-   else:
-      codigo = f"STUDNT{code}"  
+   #Genera el codigo
+   codigo = code(code_id,"STUDNT")
 
    if request.method == "POST":
 
@@ -143,27 +115,8 @@ def docentes():
    comprobar_code = "SELECT MAX(Id) FROM Teachers"
    code_id = cursor.execute(comprobar_code).fetchone()[0]
    print(code_id)
-
-   code = 0
-   if(code_id is None):
-      code = 1
-      codigo = f"TEACHR0001"
-   else:
-      code = code_id+1
-   print(code)
-
-   #DOCENT0001    
-   if code < 10:
-      codigo = f"TEACHR000{code}"
-   elif code < 100:
-   #DOCENT099
-      codigo = f"TEACHR00{code}"
-   #DOCENT0999
-   elif code < 1000:
-      codigo = f"TEACHR0{code}"    
-   else:
-      codigo = f"TEACHR{code}" 
-
+   #!Se genera el codigo
+   codigo = code(code_id,"TEACHR")
 
    if request.method == "POST":
 
@@ -174,11 +127,11 @@ def docentes():
       genero = request.form.get("Genero")
       codigo_upd = request.form['Codigo']
 
-      #Se crea la imagen de Codigo QR
+      #!Se crea la imagen de Codigo QR
       qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L)
-      #El nombre a poner
+      #!El nombre a poner
       qr.add_data(codigo)
-      #Se genera el nuevo estilo del codigo QR
+      #!Se genera el nuevo estilo del codigo QR
       img_QR = qr.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer())
          
       #QR = Image.open(f"{carnet}"+".png")
@@ -187,9 +140,9 @@ def docentes():
       
       verificar = cursor.execute("SELECT *FROM Teachers WHERE Code = ?", (codigo_upd)).fetchone()
       if verificar is None:
-         #Se envia a Firebase Storage 
+         #!Se envia a Firebase Storage 
          Send_QR(f"{codigo}",ruta)
-         #Se obtiene el enlace para poder visualizar la imagen
+         #!Se obtiene el enlace para poder visualizar la imagen
          img = Link_Img(f"{codigo}")
 
          cursor.execute("INSERT INTO Teachers (NameTeacher,Gender_Id,[E-Mail],Phone,QR_img,Departament_Id) VALUES(?,?,?,?,?,?)",
@@ -236,7 +189,6 @@ def maestros():
          return redirect("/Clases")
 
    return redirect("/Clases")
-#######################################################################
 
 @app.route('/Horario',methods=['GET','POST'])
 def hrario():
@@ -281,7 +233,8 @@ def asign():
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
-      
+   dia_actual = datetime.datetime.now().strftime("%A")
+   
    view = cursor.execute("EXEC usp_ViewAsignaciones").fetchall()
 
    if request.method == "POST":
@@ -298,12 +251,16 @@ def asign():
                         (hora_ini,hora_fin,dia_Id,lugar_id,clase_Id)) 
          cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id) VALUES(?,?)",(docent_id,clase_Id)) 
          cursor.commit()
+         #!Por cada create se actualizan los datos de la cola
+         ColaEventos(dia_actual) 
          cursor.close()
          flash("Assignement Succesful")
          return redirect("/Asignaciones")
       else:
          cursor.execute("EXEC usp_Updt_Asignaciones ?,?,?,?,?,?",(hora_ini,hora_fin,clase_Id,docent_id,lugar_id,dia_Id))
          db.commit()
+         #!Por cada update se actualizan los datos de la cola
+         ColaEventos(dia_actual) 
          cursor.close()
          flash("Modificado con exito")       
          return redirect("/Asignaciones")
@@ -349,35 +306,36 @@ def asistencia():
 @app.route('/Asistencia', methods=['GET','POST'])
 def asis():
    cursor = db.cursor()
-   #variables obtenidas de Ajax
+   #!variables obtenidas de Ajax
    clase = request.args.get("clase")
    codigo = request.args.get("Codigo")
-   #Fecha actual
+   #!Fecha actual
    fecha_actual = datetime.date.today()
       
    #Comprobando informacion
-   #print(fecha_actual)
-   #print(codigo)
-   #print(clase)
-   
-   #Verifica si hay una clase en curso
+
+   #!Verifica si hay una clase en curso
    if clase is None:
-      return render_template("qrscan.html", xd = "Nada", esta = "")  
+      return render_template("qrscan.html",  esta = "")  
    else:
       #esta = cursor.execute("EXEC usp_Estatistica ?,?",(str(clase), str(fecha_actual))).fetchall()
       Asistencia(fecha_actual,codigo,clase)
-      xd = MostrarAsistenciaActual(clase,fecha_actual)
       cursor.close()                 
       #Se cierra la conexion 
       flash("Registro de Asistencia Exitoso")
-      return render_template("qrscan.html", xd = xd, esta = 5)
-
+      return render_template("qrscan.html",  esta = 5)
+   
+@app.route('/ViewAsis', methods=["GET"])
+def viewa():
+   #!Fecha actual
+   fecha_actual = datetime.date.today()
+   clase = request.args.get("clase")
+   return viewasis(clase, fecha_actual) 
 
 #Region de Views o para Mostrar los Registros xd
 @app.route('/Alumnos', methods=["GET", "POST"])
-def viewA():
+def viewAl():
    cursor = db.cursor()
-
    query = "SELECT Id, NameCareer FROM Career"
    rows = cursor.execute(query).fetchall()
 
@@ -387,8 +345,7 @@ def viewA():
 
    #Procedimiento almacenado que muestra informacion de estudiantes
    consulta = cursor.execute("EXEC usp_ViewStudent").fetchall()
-   print(consulta)
-   
+   #print(consulta)
    #Verifica si existe o no
    if len(consulta) == 0:
       flash("Aun no hay nada aqui xd")
@@ -398,7 +355,7 @@ def viewA():
       cursor.close()
       return render_template("alumnos.html", Info = consulta, carreras = rows ,generos = genero ,Años = row)
    
-#Este hay que hacerlo desde 0 , con todo y diseño unu
+
 @app.route('/Clases',methods=["GET", "POST"])
 def viewClass():
    cursor = db.cursor()
@@ -424,16 +381,13 @@ def viewClass():
 @app.route('/Docentes',methods=["GET", "POST"])
 def viewDocen():
    cursor = db.cursor()
-   
    dep = cursor.execute("SELECT Id, NameDepartament FROM Departament").fetchall()
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
    consulta = cursor.execute("EXEC usp_ViewDocent").fetchall()
    
-
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
       return render_template("maestros.html",Info = consulta, dep = dep, generos = genero)
-
    else:
       cursor.close()  
       return render_template("maestros.html",Info=consulta, dep=dep, generos=genero)
@@ -450,10 +404,10 @@ def asignacion():
    
    if len(view) == 0:
       flash("Aun no hay asignaciones")
-      return render_template("Asignaciones.html",xd = view,edit ="XD" ,maestros = docent, dias = dia, lugares = lugar, clases = clase)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,maestros = docent, dias = dia, lugares = lugar, clases = clase)
    else:
       cursor.close()
-      return render_template("Asignaciones.html",xd = view,edit="XD", maestros = docent, dias = dia, lugares = lugar, clases = clase)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD", maestros = docent, dias = dia, lugares = lugar, clases = clase)
 
 #Editar Registros
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
@@ -468,7 +422,7 @@ def rellenoAlumn(codigo):
 
    query = cursor.execute("SELECT *FROM Students WHERE Code = ?",(codigo)).fetchone()
    cursor.close()
-   return render_template("alumnos.html",title = "Edit Student", edit = query, carreras = rows , Años = row, generos = genero)
+   return render_template("alumnos.html",title = "Edit Student",hr = "" ,edit = query, carreras = rows , Años = row, generos = genero)
 
 
 @app.route('/EditarDocente/<string:codigo>', methods=["GET","POST"])
@@ -480,7 +434,7 @@ def rellenoDocent(codigo):
    cursor.close()
    return render_template("maestros.html",edit = docent, dep = dep, generos = genero)
 
-#Hay que hacerlo de 0
+
 @app.route('/EditarClase/<string:codigo>', methods = ["GET","POST"])
 def rellenoclase(codigo):
    cursor = db.cursor()
@@ -514,10 +468,12 @@ def rellenoAsig(codigo):
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
-   view = cursor.execute("EXEC usp_ViewAsignaciones").fetchall()
+   cod = cursor.execute("EXEC usp_RellenoAsign ?", codigo).fetchone()
+   print(cod)
+   
    
    consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.Classes_Id = s.Class_Id WHERE s.Code = ?",(codigo)).fetchone()
-   return render_template("Asignaciones.html",xd = view ,edit = consult,clases = clase, maestros = docent, lugares = lugar, dias = dia)
+   return render_template("Asignaciones.html",hr = cod ,edit = consult,clases = clase, maestros = docent, lugares = lugar, dias = dia)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
 def rellenoAsis(id):
@@ -551,7 +507,6 @@ def deletedocent(codigo):
    cursor.close()
    return redirect('/Docentes')
 
-#Hay que hacerlo de 0
 @app.route('/EliminarClase/<string:codigo>')
 def deleteclas(codigo):
    cursor = db.cursor()
@@ -599,7 +554,6 @@ def deleteasig(id):
 
 
 #Funcionalidades Propias XD
-
 @app.route('/Search', methods=["GET", "POST"])
 def search():
    cursor = db.cursor()
@@ -616,15 +570,15 @@ def search():
          return render_template("index.html")
 
       elif len(query) == 9:
-      #print("Es Estudiante")
+      #?print("Es Estudiante")
          return render_template("Alumnos.html", Info = query, query = 1)
       
       elif len(query) == 6:
-      #print("Es Clase")
+      #?print("Es Clase")
          return render_template("Materias.html", info = query, query = 1)
       
       elif len(query) == 10:
-      #print("Es Docente") 
+      #?print("Es Docente") 
          return render_template("Maestros.html", Info = query, query = 1)
       else:  
          flash("No hay resultados")
@@ -632,8 +586,6 @@ def search():
    else:
       flash("Es GET No POST :c")
       return render_template("index.html")  
-
-
 
 @app.route('/Imagen/<codigo>', methods=["GET", "POST"])
 def imagen(codigo):
@@ -657,8 +609,6 @@ def imagen(codigo):
       #img = Link_Download("https://firebasestorage.googleapis.com/v0/b/project-qrimg.appspot.com/o/qr%2FESTUD0001?alt=media")
    return send_file(img, download_name=f"{codigo}.png")
 
-
-
 #Region Login 
 @app.route('/Login', methods=["GET", "POST"])
 def login():
@@ -668,12 +618,10 @@ def login():
       username = request.form.get("Username")
       password = request.form.get("Password")
 
-
       verificar = cursor.execute("SELECT *FROM Users WHERE username = ?", (username)).fetchone()
       if verificar is None:
          print("No existe el usuario")
-         return render_template("Login.html")
-      
+         return render_template("Login.html")   
       elif (check_password_hash(verificar[2],password)):
          session["user_id"] = verificar[0]
          user = session["username"] = verificar[1]
@@ -684,7 +632,6 @@ def login():
          return render_template("Login.html")
             
    return render_template("login.html")
-
 
 @app.route('/RegistroUsuario', methods=["GET", "POST"])
 def register():
@@ -712,7 +659,6 @@ def register():
             return render_template("Register.html", roles = roles)
       return render_template("Register.html" , roles = roles)
 
-
 @app.route('/Logout', methods=["GET", "POST"])
 def logout():
    session.clear() 
@@ -721,4 +667,7 @@ def logout():
 
 
 if __name__ == "__main__":
+   dia_actual = datetime.datetime.now().strftime("%A")
+   #?Aca se se tomaran los eventos que habran este dia
+   ColaEventos(dia_actual) 
    app.run(debug=True)

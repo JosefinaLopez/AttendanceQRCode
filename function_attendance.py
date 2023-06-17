@@ -38,4 +38,11 @@ def viewasis(clase,fecha):
             'telefono': '',
             'confirmacion': ''
         })
-            
+    
+def idprox():
+    idh = cursor.execute("SELECT MAX(Id) FROM School_Hours").fetchone()
+    if idh is None:
+        idh == 1;
+    else:
+        idh+1;    
+    return idh

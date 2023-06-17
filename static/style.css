@@ -291,7 +291,9 @@ font-size: medium;
     display: grid;
     border-radius: 15px;
     grid-template-columns:300px 400px;
-    gap: 15px;   
+    gap: 15px; 
+    width: 100vh;  
+    justify-items: center;
   }
   h1 {
     text-align: center;
@@ -300,9 +302,16 @@ font-size: medium;
     color: blue;
   
   }
+    .parent {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      justify-items: center;
+      position: relative;
+      top: 50px;
+    }
   /*Parte del login y register*/
   .container-register, .container-login{
-    margin-top: 5rem;
     display: flex;
     justify-content: center;
     color: rgb(2, 2, 2);

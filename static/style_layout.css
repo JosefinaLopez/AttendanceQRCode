@@ -53,7 +53,7 @@ body
 .navigation ul li:nth-child(1)
 {
     margin-bottom:40px;
-    pointer-events: none;
+    cursor: pointer;
 }
 .navigation ul li a{
     position: relative;
@@ -196,4 +196,8 @@ body
     min-height: calc(100vh - 50px - 60px); /* ajustar la altura del topbar y del footer */
     margin: 0;
     padding: 0;
+
+    background-image: url('/static/img/loto_1_.ico');
+        background-position: bottom center;
+        background-repeat: no-repeat;
 }

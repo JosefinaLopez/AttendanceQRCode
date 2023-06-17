@@ -25,12 +25,13 @@ def ColaEventos(dia):
     
     eventos = cursor.execute("""
     SELECT
-    c.NameClasse AS Clase,
+    cl.NameClasse AS Clase,
     CONVERT(VARCHAR(10), h.StartTime, 108) AS Hora_Inicio,
     CONVERT(VARCHAR(10), h.EndTime, 108) AS Hora_Final,
     d.NameDay AS Dia
-    FROM School_Hours h
-	INNER JOIN Classes c ON c.Id = h.Class_Id
+	FROM School_Hours h
+	INNER JOIN Assignment a ON a.Classes_Id = h.Id
+	INNER JOIN Classes cl ON cl.Id = a.Classes_Id
 	INNER JOIN Days d ON d.Id = h.Day_Id
 	WHERE d.NameDay = ?
                 

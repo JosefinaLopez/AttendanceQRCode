@@ -1,25 +1,32 @@
 {%extends "layout.html"%}
+{% block title%}
+Registro
+{% endblock%}
 {%block main%}
-<div class="container-register">
-    <div class="card-container" style='grid-template-columns: 1fr;  background-color:#212529;'>
-        <form action="/RegistroUsuario" method="post">
-            <h1>Registro de Usuarios</h1>
-                <input type="text" class="form-control" id='input-login' placeholder="Username" name='Username' aria-describedby="addon-wrapping">
-                <input type="password" class="form-control" id='input-login' placeholder="Password" name='Password' aria-describedby="addon-wrapping">
-                <input type="password" class="form-control" id='input-login' placeholder="Password Confirm" name='Password-Confirm' aria-describedby="addon-wrapping">
-                <select class="form-select" id='combobox' name='Rol' required="" style='max-width: 50%; position: relative; left: 81px;'>
-                    <option selected>Seleccione su Rol</option>
-                    {%for rol in roles%}
-                    <option value="{{rol[0]}}">{{rol[1]}}</option>
-                    {%endfor%}
-                </select>
-            <div class="botom">
-                <button type='submit'class='btn' id='btn' style=' position:relative; left: 7rem;'>
-                            Registrar
-                </button>
+<div class="parent">
+    <div class="card-container" style='width: 750px;'>
+        <div class="img">
+            <img src="/static/img/cliente.gif" style="width:300px;">
         </div>
-        <a href="/Login" id='a' style='position: relative; left:50px;'>Ya tenes una cuenta? Inicia Session</a>
-        </form>
+        <div class="container-register">
+            <form action="/RegistroUsuario" method="post">
+                <H1>Registro de Usuarios</H1>
+                    <input type="text" class="form-control" id='input-login' placeholder="Username" name='Username' aria-describedby="addon-wrapping">
+                    <input type="password" class="form-control" id='input-login' placeholder="Password" name='Password' aria-describedby="addon-wrapping">
+                    <input type="password" class="form-control" id='input-login' placeholder="Password Confirm" name='Password-Confirm' aria-describedby="addon-wrapping">
+                    <select class="form-select" id='combobox' name='Rol' required="" style='max-width: 50%; position: relative; left: 81px;'>
+                        <option selected>Seleccione su Rol</option>
+                        {%for rol in roles%}
+                        <option value="{{rol[0]}}">{{rol[1]}}</option>
+                        {%endfor%}
+                    </select>
+                <div class="botom">
+                    <button type='submit'class='btn' id='btn' >
+                                Registrar
+                    </button>
+            </div>
+            </form>
+        </div>
     </div>
 </div>
 {%endblock%}

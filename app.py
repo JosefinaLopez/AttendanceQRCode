@@ -7,7 +7,7 @@ from flask_session import Session
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
 from conexion import connection 
-from function_attendance import Asistencia, viewasis
+from function_attendance import Asistencia, viewasis, idprox
 from prueba import code
 from helps import login_required
 from fuction_event import ColaEventos,CompararEvento
@@ -26,10 +26,13 @@ Session(app)
 #? hacer una cola que guarde los eventos y luego que solo se muestre y comparen
 
 @app.route('/', methods=['GET'])
+@login_required   
 def index():
+   user_id = session["user_id"]
    return render_template("index.html")
 
 @app.route('/horario_actual', methods=['GET'])
+@login_required 
 def horario_actual():
    hora_actual = request.args.get('time','')
    if hora_actual == '':
@@ -46,6 +49,7 @@ def horario_actual():
    return CompararEvento(hora_actual)
 
 @app.route("/RegistroAlumno",methods=["GET","POST"])
+@login_required 
 def registerA():
 
    cursor = db.cursor()     
@@ -109,6 +113,7 @@ def registerA():
 
 
 @app.route('/RegistroDocentes', methods=["GET", "POST"])
+@login_required 
 def docentes():
    cursor = db.cursor()
    #Obtiene el ultimo Id Registrado y le suma una 
@@ -163,6 +168,7 @@ def docentes():
       return redirect("/Docentes")
 
 @app.route('/RegistroClases', methods=["GET", "POST"])
+@login_required 
 def maestros():
    cursor = db.cursor() 
    #Variables
@@ -191,6 +197,7 @@ def maestros():
    return redirect("/Clases")
 
 @app.route('/Horario',methods=['GET','POST'])
+@login_required 
 def hrario():
    cursor = db.cursor()
    query = "SELECT Id, NameCareer FROM Career"
@@ -220,6 +227,7 @@ def hrario():
    return render_template("horario.html",hr ="",carreras = rows , año = row)
 
 @app.route('/MasRegistros', methods=["GET", "POST"])
+@login_required 
 def regisma():
    cursor = db.cursor()
    de = cursor.execute("SELECT Id, NameDepartament FROM Departament").fetchall()
@@ -227,14 +235,15 @@ def regisma():
    return render_template("uwu.html" , dep = de)
 
 @app.route("/RegistroAsignaciones",methods=["GET", "POST"])
+@login_required 
 def asign():
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
-   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
+   #clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
    dia_actual = datetime.datetime.now().strftime("%A")
-   
+
    view = cursor.execute("EXEC usp_ViewAsignaciones").fetchall()
 
    if request.method == "POST":
@@ -244,12 +253,13 @@ def asign():
       lugar_id = request.form.get("Lugar_Id")
       clase_Id =request.form.get("Clase_Id")
       docent_id = request.form.get("Maestros")
+      horario_id = idprox()
 
       verificar_Horario = cursor.execute("SELECT Id FROM School_Hours WHERE Class_Id = ?",(clase_Id)).fetchone()
       if verificar_Horario is None:
          cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id,Class_Id) VALUES(?,?,?,?,?)",
                         (hora_ini,hora_fin,dia_Id,lugar_id,clase_Id)) 
-         cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id) VALUES(?,?)",(docent_id,clase_Id)) 
+         cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id,School_Hours_Id) VALUES(?,?,?)",(docent_id,clase_Id,horario_id)) 
          cursor.commit()
          #!Por cada create se actualizan los datos de la cola
          ColaEventos(dia_actual) 
@@ -268,6 +278,7 @@ def asign():
       return redirect("/Asignaciones")
 
 @app.route('/AgregarUbicaciones', methods=["GET", "POST"])
+@login_required 
 def regisubi():
    cursor = db.cursor()
    if request.method == "POST":
@@ -283,14 +294,13 @@ def regisubi():
          return render_template("uwu.html")
 
 @app.route('/AgregarCarrera', methods=["GET", "POST"])
+@login_required 
 def asistencia():
    cursor = db.cursor()
    carrera = request.form.get("Carrera")
    dep = request.form.get("Departamento")
-   if request.methods == "POST":
-      
+   if request.methods == "POST": 
       de = cursor.execute("SELECT Id, NameDepartament FROM Departament").fetchall()
-
       verificar = cursor.execute("SELECT NameCareer FROM Career WHERE NameCaeer = ?", (carrera)).fetchone()
       if verificar is None:
          cursor.execute("INSERT INTO Career (NameCareer,Departament_Id) VALUES(?,?)",(carrera,dep))
@@ -304,6 +314,7 @@ def asistencia():
 
 
 @app.route('/Asistencia', methods=['GET','POST'])
+@login_required 
 def asis():
    cursor = db.cursor()
    #!variables obtenidas de Ajax
@@ -311,9 +322,6 @@ def asis():
    codigo = request.args.get("Codigo")
    #!Fecha actual
    fecha_actual = datetime.date.today()
-      
-   #Comprobando informacion
-
    #!Verifica si hay una clase en curso
    if clase is None:
       return render_template("qrscan.html",  esta = "")  
@@ -326,6 +334,7 @@ def asis():
       return render_template("qrscan.html",  esta = 5)
    
 @app.route('/ViewAsis', methods=["GET"])
+@login_required 
 def viewa():
    #!Fecha actual
    fecha_actual = datetime.date.today()
@@ -334,6 +343,7 @@ def viewa():
 
 #Region de Views o para Mostrar los Registros xd
 @app.route('/Alumnos', methods=["GET", "POST"])
+@login_required 
 def viewAl():
    cursor = db.cursor()
    query = "SELECT Id, NameCareer FROM Career"
@@ -357,16 +367,14 @@ def viewAl():
    
 
 @app.route('/Clases',methods=["GET", "POST"])
+@login_required 
 def viewClass():
    cursor = db.cursor()
    query = "SELECT Id, NameCareer FROM Career"
    rows = cursor.execute(query).fetchall()
-
    Año = "SELECT Id,SchoolYearName FROM School_Year"
    row = cursor.execute(Año).fetchall()
-
    consulta = cursor.execute("EXEC usp_ViewMateria").fetchall()
-
    #Verificar si hay registros 
    if len(consulta) == 0:
       flash("Aun no hay registros aqui")
@@ -379,12 +387,12 @@ def viewClass():
 
 
 @app.route('/Docentes',methods=["GET", "POST"])
+@login_required 
 def viewDocen():
    cursor = db.cursor()
    dep = cursor.execute("SELECT Id, NameDepartament FROM Departament").fetchall()
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
    consulta = cursor.execute("EXEC usp_ViewDocent").fetchall()
-   
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
       return render_template("maestros.html",Info = consulta, dep = dep, generos = genero)
@@ -394,23 +402,26 @@ def viewDocen():
       
 
 @app.route('/Asignaciones', methods=["GET","POST"])
+@login_required 
 def asignacion():
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
-   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
+#   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
+   
    view = cursor.execute("EXEC usp_ViewAsignaciones").fetchall()
    
    if len(view) == 0:
       flash("Aun no hay asignaciones")
-      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,maestros = docent, dias = dia, lugares = lugar, clases = clase)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,maestros = docent, dias = dia, lugares = lugar)
    else:
       cursor.close()
-      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD", maestros = docent, dias = dia, lugares = lugar, clases = clase)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD", maestros = docent, dias = dia, lugares = lugar)
 
 #Editar Registros
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
+@login_required 
 def rellenoAlumn(codigo):
    cursor = db.cursor()
    query = "SELECT Id, NameCareer FROM Career"
@@ -426,6 +437,7 @@ def rellenoAlumn(codigo):
 
 
 @app.route('/EditarDocente/<string:codigo>', methods=["GET","POST"])
+@login_required 
 def rellenoDocent(codigo):
    cursor = db.cursor()
    dep = cursor.execute("SELECT Id , NameDepartament FROM Departament").fetchall()
@@ -436,6 +448,7 @@ def rellenoDocent(codigo):
 
 
 @app.route('/EditarClase/<string:codigo>', methods = ["GET","POST"])
+@login_required 
 def rellenoclase(codigo):
    cursor = db.cursor()
    carrera = cursor.execute("SELECT *FROM Career").fetchall()
@@ -445,6 +458,7 @@ def rellenoclase(codigo):
    return render_template("materias.html", edit = clase, carreras = carrera, años = Año)
 
 @app.route('/EditarCarrera/<int:id>', methods=["GET","POST"])
+@login_required 
 def rellenocarrera(id):
    cursor = db.cursor()
    dep = "SELECT Id, NombreDepartament FROM Departament"
@@ -454,6 +468,7 @@ def rellenocarrera(id):
    return render_template("masregistros.html", edit = query , dept = row)
 
 @app.route('/EditarUbicacion/<int:id>', methods=["GET","POST"])
+@login_required 
 def rellenoubi(id):
    cursor = db.cursor()
    xd = "SELECT *FROM Place WHERE Id = ?",(id)
@@ -462,34 +477,32 @@ def rellenoubi(id):
    return render_template("masregistros.html",edit2 = query)
 
 @app.route('/EditarAsignacion/<string:codigo>',methods= ["GET","POST"])
+@login_required 
 def rellenoAsig(codigo):
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
-   cod = cursor.execute("EXEC usp_RellenoAsign ?", codigo).fetchone()
-   print(cod)
-   
-   
+   cod = cursor.execute("EXEC usp_RellenoAsign ?", codigo).fetchone()   
    consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.Classes_Id = s.Class_Id WHERE s.Code = ?",(codigo)).fetchone()
    return render_template("Asignaciones.html",hr = cod ,edit = consult,clases = clase, maestros = docent, lugares = lugar, dias = dia)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
+@login_required 
 def rellenoAsis(id):
    cursor = db.cursor()
-
    a = "SELECT Id, NameStudent FROM Students"
    alum = cursor.execute(a).fetchall()
    xd = "SELECT Id, NameClass FROM Classess"
    clas = cursor.execute(xd).fetchall()
-
    query = cursor.execute("SELECT *FROM  Attendance WHERE Id = ?",(id)).fetchone()
    return render_template("masregistros.html", edit3 = query , alum = alum, clase = clas)
 
 
 #Eliminar Registros
 @app.route('/EliminarAlumno/<string:codigo>')
+@login_required 
 def deleteStu(codigo):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Students WHERE Code = ?", (codigo))
@@ -499,6 +512,7 @@ def deleteStu(codigo):
    return redirect("/Alumnos")
 
 @app.route('/EliminarDocente/<string:codigo>')
+@login_required 
 def deletedocent(codigo):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Teachers WHERE Code = ?", (codigo))
@@ -508,6 +522,7 @@ def deletedocent(codigo):
    return redirect('/Docentes')
 
 @app.route('/EliminarClase/<string:codigo>')
+@login_required 
 def deleteclas(codigo):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Classess WHERE Code = ?", (codigo))
@@ -517,6 +532,7 @@ def deleteclas(codigo):
    return redirect("/Clase")
 
 @app.route('/EliminarAsistencia/<int:id>')
+@login_required 
 def deleteAsis(id):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Attendance WHERE id = ?", (id))
@@ -525,6 +541,7 @@ def deleteAsis(id):
    return redirect("QrScanner.html")
 
 @app.route('/EliminarCarrera/<int:id>')
+@login_required 
 def deletecar(id):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Career WHERE id = ?", (id))
@@ -534,6 +551,7 @@ def deletecar(id):
    return redirect("RegMenores.html")
 
 @app.route('/EliminarLugar/<int:id>')
+@login_required 
 def deletelugar(id):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Place WHERE id = ?", (id))
@@ -543,6 +561,7 @@ def deletelugar(id):
    redirect("/RegMenores")   
 
 @app.route('/EliminarAsignacion/<int:id>')
+@login_required 
 def deleteasig(id):
    cursor = db.cursor()
    query = cursor.execute("DELETE FROM Assignment WHERE Id = ?",(id))
@@ -555,6 +574,7 @@ def deleteasig(id):
 
 #Funcionalidades Propias XD
 @app.route('/Search', methods=["GET", "POST"])
+@login_required 
 def search():
    cursor = db.cursor()
    if request.method=="POST":  
@@ -588,6 +608,7 @@ def search():
       return render_template("index.html")  
 
 @app.route('/Imagen/<codigo>', methods=["GET", "POST"])
+@login_required 
 def imagen(codigo):
    cursor = db.cursor()
    if request.method =="GET":
@@ -612,6 +633,7 @@ def imagen(codigo):
 #Region Login 
 @app.route('/Login', methods=["GET", "POST"])
 def login():
+   session.clear()
    cursor = db.cursor()
    if request.method == "POST":
 
@@ -620,7 +642,7 @@ def login():
 
       verificar = cursor.execute("SELECT *FROM Users WHERE username = ?", (username)).fetchone()
       if verificar is None:
-         print("No existe el usuario")
+         flash("No existe el usuario")
          return render_template("Login.html")   
       elif (check_password_hash(verificar[2],password)):
          session["user_id"] = verificar[0]
@@ -646,9 +668,7 @@ def register():
          confirm = request.form.get("Password-Confirm")
 
          hash = generate_password_hash(password)
-
          verificar = cursor.execute("SELECT *FROM Users WHERE username = ?",(username)).fetchone()
-
          if verificar is None:
             cursor.execute("INSERT INTO Users (Username, Password, Roles_Id) VALUES(?,?,?)",(username,hash,rol))
             cursor.commit()

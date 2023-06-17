@@ -1,4 +1,7 @@
 {%extends "layout.html"%}
+{% block title%}
+Login
+{% endblock%}
 {%block main%}
 <style>
     #input-login{
@@ -8,20 +11,27 @@
         position: relative;
         left: 40px;
     }
+    #img{
+        max-width: 250px;
+    }
 </style>
-<div class="container-login">
-    <div class="card-container" style='grid-template-columns: 1fr;  background-color:#212529;;'>
-        <form action="/Login" method="post">
-            <h1>Iniciar Session</h1>
-            <input type="text" class="form-control" id='input-login' placeholder="Username" name='Username' aria-describedby="addon-wrapping">
-            <input type="password" class="form-control" id='input-login' placeholder="Password" name='Password' aria-describedby="addon-wrapping">
-            <div class="botom">
-                <button type='submit'class='btn' id='btn'>
-                Iniciar Session
-            </button>
-            </div>
-            <a href="/RegistroUsuario" id='a'>No tenes una cuenta? Registrate</a>
-        </form>
+<div class="parent">
+    <div class="card-container" style='width: 750px;' >
+        <div class="img">
+            <img id= "img" src="/static/img/acceso.gif">
+        </div>
+        <div class="container-register" >
+            <form action="/Login" method="post">
+                <h1>Iniciar Session</h1>
+                <input type="text" class="form-control" id='input-login' placeholder="Username" name='Username' aria-describedby="addon-wrapping">
+                <input type="password" class="form-control" id='input-login' placeholder="Password" name='Password' aria-describedby="addon-wrapping">
+                <div class="botom">
+                    <button type='submit'class='btn' id='btn'>
+                    Iniciar Session
+                </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {%endblock%}

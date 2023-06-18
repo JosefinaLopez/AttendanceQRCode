@@ -23,13 +23,13 @@ Asignaciones
               <select class="form-select" id='combobox' style='width: 55%;' name='Maestros' required="">
                 <option selected>Select the teach</option>
                 {%for maestro in maestros%}
-                <option value="{{maestro[0]}}"{%if edit[8]== maestro[0]%}selected{%endif%}>{{maestro[1]}}</option>
+                <option value="{{maestro[0]}}"{%if edit[7]== maestro[0]%}selected{%endif%}>{{maestro[1]}}</option>
                 {%endfor%}
                 </select>
                 <select class="form-select" id='combobox' style='width: 55%;' name='Clase_Id' required="">
                     <option selected>Select the class to teach</option>
-                    {%for clase in clases%}
-                    <option value="{{clase[0]}}"{%if edit[9]== clase[0]%}selected{%endif%}>{{clase[1]}}</option>
+                    {%for clase in clase%}
+                    <option value="{{clase[0]}}"{%if edit[6]== clase[0]%}selected{%endif%}>{{clase[1]}}</option>
                     {%endfor%}
                 </select>
                   {%if edit != "XD"%}        
@@ -72,7 +72,7 @@ Asignaciones
                     </select>
                 
                   <div class="botom">
-                    <input type="hidden" name="Id" value="{{ edit[1] if edit != XD else '' }}">
+                    <input type="hidden" name="Id" value="{{ edit[0] if edit != XD else '' }}">
                     <button id='btn' type='submit'class='btn btn-primary'>
                       {%if edit != "XD"%}
                         Editar
@@ -90,7 +90,6 @@ Asignaciones
     </div>
 </div>
 </form>
-        
               <!-- Modal -->
               <div class="modal fade modal-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

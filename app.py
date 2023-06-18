@@ -239,7 +239,7 @@ def regisma():
 def asign():
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
-   #clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
+   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
    dia_actual = datetime.datetime.now().strftime("%A")
@@ -253,12 +253,13 @@ def asign():
       lugar_id = request.form.get("Lugar_Id")
       clase_Id =request.form.get("Clase_Id")
       docent_id = request.form.get("Maestros")
+      ida = request.form.get("Id")
       horario_id = idprox()
 
-      verificar_Horario = cursor.execute("SELECT Id FROM School_Hours WHERE Class_Id = ?",(clase_Id)).fetchone()
+      verificar_Horario = cursor.execute("SELECT Id FROM School_Hours WHERE Id = ?",(horario_id)).fetchone()
       if verificar_Horario is None:
-         cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id,Class_Id) VALUES(?,?,?,?,?)",
-                        (hora_ini,hora_fin,dia_Id,lugar_id,clase_Id)) 
+         cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id) VALUES(?,?,?,?)",
+                        (hora_ini,hora_fin,dia_Id,lugar_id)) 
          cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id,School_Hours_Id) VALUES(?,?,?)",(docent_id,clase_Id,horario_id)) 
          cursor.commit()
          #!Por cada create se actualizan los datos de la cola
@@ -267,7 +268,7 @@ def asign():
          flash("Assignement Succesful")
          return redirect("/Asignaciones")
       else:
-         cursor.execute("EXEC usp_Updt_Asignaciones ?,?,?,?,?,?",(hora_ini,hora_fin,clase_Id,docent_id,lugar_id,dia_Id))
+         cursor.execute("EXEC usp_Updt_Asignaciones ?,?,?,?,?,?,?",(ida,hora_ini,hora_fin,clase_Id,docent_id,lugar_id,dia_Id))
          db.commit()
          #!Por cada update se actualizan los datos de la cola
          ColaEventos(dia_actual) 
@@ -406,7 +407,7 @@ def viewDocen():
 def asignacion():
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
-#   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
+   clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
    
@@ -414,10 +415,10 @@ def asignacion():
    
    if len(view) == 0:
       flash("Aun no hay asignaciones")
-      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,maestros = docent, dias = dia, lugares = lugar)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,clase= clase ,maestros = docent, dias = dia, lugares = lugar)
    else:
       cursor.close()
-      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD", maestros = docent, dias = dia, lugares = lugar)
+      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD",clase = clase ,maestros = docent, dias = dia, lugares = lugar)
 
 #Editar Registros
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
@@ -476,17 +477,17 @@ def rellenoubi(id):
    cursor.close()
    return render_template("masregistros.html",edit2 = query)
 
-@app.route('/EditarAsignacion/<string:codigo>',methods= ["GET","POST"])
+@app.route('/EditarAsignacion/<string:code>',methods= ["GET","POST"])
 @login_required 
-def rellenoAsig(codigo):
+def rellenoAsig(code):
    cursor = db.cursor()
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
-   cod = cursor.execute("EXEC usp_RellenoAsign ?", codigo).fetchone()   
-   consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.Classes_Id = s.Class_Id WHERE s.Code = ?",(codigo)).fetchone()
-   return render_template("Asignaciones.html",hr = cod ,edit = consult,clases = clase, maestros = docent, lugares = lugar, dias = dia)
+   cod = cursor.execute("EXEC usp_RellenoAsign ?", code).fetchone()   
+   consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.School_Hours_Id = s.Id WHERE s.Code = ?",(code)).fetchone()
+   return render_template("Asignaciones.html",hr = cod ,edit = consult,clase = clase, maestros = docent, lugares = lugar, dias = dia)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
 @login_required 

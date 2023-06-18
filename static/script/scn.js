@@ -44,31 +44,31 @@ scanner.addListener('scan', function (content) {
     });
   });
 });
-
-$.getJSON('/horario_actual', function (data){
+$.getJSON('/horario_actual', function (data) {
   $.ajax({
     url: '/ViewAsis',
     data: {
       clase: data.clase
     },
     success: function (response) {
-      $.getJSON('/ViewAsis', function (data) {
-        const tabla = document.getElementById('tabla');
-        tabla.innerHTML = '';
+      const tabla = document.getElementById('tabla');
+      tabla.innerHTML = '';
 
-        data.array.forEach(registro => {
-          const fila = tabla.insertRow();
-          fila.insertCell().innerText = registro.id;
-          fila.insertCell().innerText = registro.student;
-          fila.insertCell().innerText = registro.carnet;
-          fila.insertCell().innerText = registro.gmail;
-          fila.insertCell().innerText = registro.telefono;
-        });
-        $('#confirm').text(data.confirmacion);
+      response.attendance.forEach(registro => {
+        const fila = tabla.insertRow();
+        fila.insertCell().innerText = registro.id;
+        fila.insertCell().innerText = registro.student;
+        fila.insertCell().innerText = registro.carnet;
+        fila.insertCell().innerText = registro.gmail;
+        fila.insertCell().innerText = registro.telefono;
       });
+
+      $('#confirm').text(response.confirmacion);
     }
   });
 });
+
+
 // Obtener las cámaras disponibles y empezar a escanear
 Instascan.Camera.getCameras().then(function (cameras) {
   if (cameras.length > 0) {

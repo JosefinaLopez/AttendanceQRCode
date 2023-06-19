@@ -50,11 +50,11 @@ $.getJSON('/horario_actual', function (data) {
     data: {
       clase: data.clase
     },
-    success: function (response) {
+    success: function (data) {
       const tabla = document.getElementById('tabla');
       tabla.innerHTML = '';
 
-      response.attendance.forEach(registro => {
+      data.attendance.forEach(registro => {
         const fila = tabla.insertRow();
         fila.insertCell().innerText = registro.id;
         fila.insertCell().innerText = registro.student;

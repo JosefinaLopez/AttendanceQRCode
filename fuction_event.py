@@ -67,9 +67,9 @@ def CompararEvento(hora_actual):
         if _hora_actual >= inicio_actual and _hora_actual <= final_actual:
             return jsonify({'clase': clase_actual, 'final': final})
         else:
-            return jsonify({'clase': 'Aun no hay', 'final': '00:00'})
+            return jsonify({'clase': '', 'finaliza a las': ''})
     else:
-            return jsonify({'clase': 'XDDDD', 'final': '00:00'})
+            return jsonify({'clase': '', 'finaliza a las': ''})
 
 
 

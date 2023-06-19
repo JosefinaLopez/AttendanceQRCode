@@ -256,10 +256,11 @@ def asign():
       ida = request.form.get("Id")
       horario_id = idprox()
 
-      verificar_Horario = cursor.execute("SELECT Id FROM School_Hours WHERE Id = ?",(horario_id)).fetchone()
+      verificar_Horario = cursor.execute("SELECT  Code FROM School_Hours WHERE Day_Id = ?  AND EndTime = ?",(dia_Id,hora_fin)).fetchone()
       if verificar_Horario is None:
          cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id) VALUES(?,?,?,?)",
                         (hora_ini,hora_fin,dia_Id,lugar_id)) 
+         cursor.commit()
          cursor.execute("INSERT INTO Assignment (Teacher_Id, Classes_Id,School_Hours_Id) VALUES(?,?,?)",(docent_id,clase_Id,horario_id)) 
          cursor.commit()
          #!Por cada create se actualizan los datos de la cola
@@ -415,10 +416,10 @@ def asignacion():
    
    if len(view) == 0:
       flash("Aun no hay asignaciones")
-      return render_template("Asignaciones.html",hr = "",xd = view,edit ="XD" ,clase= clase ,maestros = docent, dias = dia, lugares = lugar)
+      return render_template("asignaciones.html",hr = "",xd = view,edit ="XD" ,clase= clase ,maestros = docent, dias = dia, lugares = lugar)
    else:
       cursor.close()
-      return render_template("Asignaciones.html",hr = "",xd = view,edit="XD",clase = clase ,maestros = docent, dias = dia, lugares = lugar)
+      return render_template("asignaciones.html",hr = "",xd = view,edit="XD",clase = clase ,maestros = docent, dias = dia, lugares = lugar)
 
 #Editar Registros
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
@@ -487,7 +488,7 @@ def rellenoAsig(code):
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
    cod = cursor.execute("EXEC usp_RellenoAsign ?", code).fetchone()   
    consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.School_Hours_Id = s.Id WHERE s.Code = ?",(code)).fetchone()
-   return render_template("Asignaciones.html",hr = cod ,edit = consult,clase = clase, maestros = docent, lugares = lugar, dias = dia)
+   return render_template("asignaciones.html",hr = cod ,edit = consult,clase = clase, maestros = docent, lugares = lugar, dias = dia)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
 @login_required 
@@ -526,7 +527,7 @@ def deletedocent(codigo):
 @login_required 
 def deleteclas(codigo):
    cursor = db.cursor()
-   query = cursor.execute("DELETE FROM Classess WHERE Code = ?", (codigo))
+   query = cursor.execute("DELETE  FROM Classes WHERE Code = ?", (codigo))
    cursor.commit()
    cursor.close()
    flash("Registro eliminado")
@@ -561,16 +562,18 @@ def deletelugar(id):
    cursor.close()
    redirect("/RegMenores")   
 
-@app.route('/EliminarAsignacion/<int:id>')
+@app.route('/EliminarAsignacion/<string:code>')
 @login_required 
-def deleteasig(id):
+def deleteasig(code):
    cursor = db.cursor()
-   query = cursor.execute("DELETE FROM Assignment WHERE Id = ?",(id))
-   query2 = cursor.execute("DELETE School_Hours WHERE Id=?",(id))
+   idh = cursor.execute("SELECT Id FROM School_Hours WHERE Code = ?",(code))
+   print(idh)
+   query = cursor.execute("DELETE FROM Assignment WHERE Id = ?",(idh))
+   query2 = cursor.execute("DELETE School_Hours WHERE Id = ?",(idh))
    cursor.commit()
    flash("Registro Eliminado")
    cursor.close()
-   return redirect(url_for("RegMenores.html"))   
+   return redirect(url_for("asignaciones.html"))   
 
 
 #Funcionalidades Propias XD
@@ -594,7 +597,7 @@ def search():
       #?print("Es Estudiante")
          return render_template("Alumnos.html", Info = query, query = 1)
       
-      elif len(query) == 6:
+      elif len(query) == 4:
       #?print("Es Clase")
          return render_template("Materias.html", info = query, query = 1)
       

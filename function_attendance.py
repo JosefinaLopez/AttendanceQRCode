@@ -40,10 +40,11 @@ def viewasis(clase,fecha):
         })
     
 def idprox():
-    idh = 0
     idh = cursor.execute("SELECT MAX(Id) FROM School_Hours").fetchone()
-    if idh is None:
-        idnx = int(idh[0]) + 1
+    if idh[0] is None:
+        idh = 1
+        print("aquiiiiii")
     else:
-        idnx = 1
-    return idnx
+        idh = int(idh[0])+1
+        print(idh)
+    return idh

@@ -39,8 +39,8 @@ def viewasis(clase,fecha):
             'confirmacion': ''
         })
     
-def idprox():
-    idh = cursor.execute("SELECT MAX(Id) FROM School_Hours").fetchone()
+def idprox(tbla):
+    idh = cursor.execute(f"SELECT MAX(Id) FROM {tbla}").fetchone()
     if idh[0] is None:
         idh = 1
         print("aquiiiiii")

@@ -7,4 +7,6 @@ google-cloud-storage==2.7.0
 python-dotenv
 pyrebase4
 python-dateutil
+xhtml2pdf
+django
 

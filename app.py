@@ -254,10 +254,10 @@ def asign():
       clase_Id =request.form.get("Clase_Id")
       docent_id = request.form.get("Maestros")
       ida = request.form.get("Id")
-      horario_id = idprox()
-
-      verificar_Horario = cursor.execute("SELECT  Code FROM School_Hours WHERE Day_Id = ?  AND EndTime = ?",(dia_Id,hora_fin)).fetchone()
-      if verificar_Horario is None:
+      horario_id = idprox("School_Hours")
+         
+      verificar_Horario = cursor.execute("SELECT MAX(Id) FROM School_Hours").fetchone()
+      if verificar_Horario[0] is None:
          cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id) VALUES(?,?,?,?)",
                         (hora_ini,hora_fin,dia_Id,lugar_id)) 
          cursor.commit()
@@ -694,4 +694,5 @@ if __name__ == "__main__":
    dia_actual = datetime.datetime.now().strftime("%A")
    #?Aca se se tomaran los eventos que habran este dia
    ColaEventos(dia_actual) 
+   print(dia_actual)
    app.run(debug=True)

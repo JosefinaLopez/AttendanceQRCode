@@ -40,7 +40,7 @@ def ColaEventos(dia):
     #!Recorre el resultado y lo agrega a la cola xd
     for evento in eventos:
         AddCola(evento) 
-        #print(evento) 
+        print(evento) 
 
 def CompararEvento(hora_actual):
 
@@ -93,4 +93,3 @@ if __name__ == "__main__":
     ColaEventos(dia)
     CompararEvento(hora_actual) 
     """
-

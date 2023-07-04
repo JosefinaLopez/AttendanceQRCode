@@ -100,6 +100,7 @@
         {%endfor%}
       {%endif%}
     </div>
+
     <div class="optionsuwu">
       <h1>Student Registration</h1>
       <form action="/RegistroAlumno" method="post">
@@ -120,7 +121,7 @@
               <select class="form-select" id='combobox' name='Genero' required>
                 <option selected>Select Gender</option>
                 {%for gender in generos%}
-                <option value="{{gender[0]}}" {%if edit and edit[7] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
+                <option value="{{gender[0]}}" {%if edit and edit[9] == gender[0]%}selected{%endif%}>{{gender[1]}}</option>
                 {%endfor%}
               </select>
             </div>
@@ -128,7 +129,7 @@
               <select class="form-select" id='combobox' name='Carrera' required="">
                   <option selected value=''>Selecting a career</option>
                 {%for carr in carreras%}
-                <option value="{{carr[0]}}" {%if edit and edit[8] == carr[0]%}selected{%endif%}>{{carr[1]}}</option>
+                <option value="{{carr[0]}}" {%if edit and edit[7] == carr[0]%}selected{%endif%}>{{carr[1]}}</option>
                 {%endfor%}
             </select>
             </div>
@@ -146,12 +147,45 @@
             {{'Update' if edit else 'Register'}}
             </button>
             </div>
-
         </div>
     </form>
     </div>
+    <nav aria-label="Page navigation example" style='display:flex; justify-content:center;'>
+      <ul class="pagination">
+        {% if inic == 0 %}
+        <li class="page-item disabled">
+          <a class="page-link" href="/Clases?inic={{ inic - limit }}&limit={{ limit }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link" href="/Clases?inic={{ inic - limit }}&limit={{ limit }}">Previous</a>
+        </li>
+        {% endif %}
+    
+        {% for i in range(cantidad) %}
+        {% if inic / limit == i %}
+        <li class="page-item active">
+          <a class="page-link" href="/Clases?inic={{ i * limit }}&limit={{ limit }}">{{ i+1 }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link" href="/Clases?inic={{ i * limit }}&limit={{ limit }}">{{ i+1 }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    
+        {% if inic >= total - limit %}
+        <li class="page-item disabled next">
+          <a class="page-link" href="/Clases?inic={{ inic + limit }}&limit={{ limit }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item next">
+          <a class="page-link" href="/Clases?inic={{ inic + limit }}&limit={{ limit }}">Next</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
   </div>
-  
 </main>
 <body>
 

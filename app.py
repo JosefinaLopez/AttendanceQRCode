@@ -1,3 +1,5 @@
+from itertools import count
+import math
 from os import remove
 from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -348,6 +350,10 @@ def viewa():
 @login_required 
 def viewAl():
    cursor = db.cursor()
+   long = cursor.execute("SELECT COUNT(1) FROM Students").fetchone()[0]
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
+   
    query = "SELECT Id, NameCareer FROM Career"
    rows = cursor.execute(query).fetchall()
 
@@ -359,32 +365,36 @@ def viewAl():
    consulta = cursor.execute("EXEC usp_ViewStudent").fetchall()
    #print(consulta)
    #Verifica si existe o no
-   if len(consulta) == 0:
+   if len(consulta) == 0 or inic >= int(long):
       flash("Aun no hay nada aqui xd")
-      return render_template("alumnos.html", Info = consulta,carreras = rows ,generos = genero ,Años = row)
+      return render_template("alumnos.html", Info = consulta,total = long, cantidad=0,inic = inic, limit = limit,carreras = rows ,generos = genero ,Años = row)
 
    else:
       cursor.close()
-      return render_template("alumnos.html", Info = consulta, carreras = rows ,generos = genero ,Años = row)
+      return render_template("alumnos.html", Info = consulta,total = long, cantidad = 0, inic = inic, limit = limit ,carreras = rows ,generos = genero ,Años = row)
    
 
 @app.route('/Clases',methods=["GET", "POST"])
 @login_required 
 def viewClass():
    cursor = db.cursor()
+   long = cursor.execute("SELECT COUNT(1) FROM Classes").fetchone()[0]
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
+
    query = "SELECT Id, NameCareer FROM Career"
    rows = cursor.execute(query).fetchall()
    Año = "SELECT Id,SchoolYearName FROM School_Year"
    row = cursor.execute(Año).fetchall()
-   consulta = cursor.execute("EXEC usp_ViewMateria").fetchall()
+   consulta = cursor.execute("EXEC usp_ViewMateria ?,?",inic,limit).fetchall()
    #Verificar si hay registros 
-   if len(consulta) == 0:
+   if len(consulta) == 0 or inic >= int(long):
       flash("Aun no hay registros aqui")
-      return render_template("materias.html", clases = consulta, carreras = rows , años = row)
+      return render_template("materias.html", clases = consulta,total = long, inic= inic, limit =limit,carreras = rows , años = row)
 
    else:
       cursor.close()   
-      return render_template("materias.html", clases = consulta, carreras = rows , años = row)
+      return render_template("materias.html", clases = consulta, total = long,cantidad=0, inic=inic, limit=limit, carreras = rows , años = row)
 
 
 
@@ -392,21 +402,25 @@ def viewClass():
 @login_required 
 def viewDocen():
    cursor = db.cursor()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
    dep = cursor.execute("SELECT Id, NameDepartament FROM Departament").fetchall()
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
    consulta = cursor.execute("EXEC usp_ViewDocent").fetchall()
    if len(consulta) == 0:
       flash("Aun no hay registros Aqui")
-      return render_template("maestros.html",Info = consulta, dep = dep, generos = genero)
+      return render_template("maestros.html",Info = consulta,total = 1,cantidad = 0, inic= inic, limit =limit, dep = dep, generos = genero)
    else:
       cursor.close()  
-      return render_template("maestros.html",Info=consulta, dep=dep, generos=genero)
+      return render_template("maestros.html",Info=consulta,total =1,cantidad = 0 ,inic= inic, limit =limit, dep=dep, generos=genero)
       
 
 @app.route('/Asignaciones', methods=["GET","POST"])
 @login_required 
 def asignacion():
    cursor = db.cursor()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
@@ -416,48 +430,57 @@ def asignacion():
    
    if len(view) == 0:
       flash("Aun no hay asignaciones")
-      return render_template("asignaciones.html",hr = "",xd = view,edit ="XD" ,clase= clase ,maestros = docent, dias = dia, lugares = lugar)
+      return render_template("asignaciones.html",hr = "",xd = view,edit ="XD" ,total = 1,cantidad = 0, inic= inic, limit =limit,clase= clase ,maestros = docent, dias = dia, lugares = lugar)
    else:
       cursor.close()
-      return render_template("asignaciones.html",hr = "",xd = view,edit="XD",clase = clase ,maestros = docent, dias = dia, lugares = lugar)
+      return render_template("asignaciones.html",hr = "",xd = view,edit="XD",total = 1,cantidad = 0, inic= inic, limit =limit,clase = clase ,maestros = docent, dias = dia, lugares = lugar)
 
 #Editar Registros
 @app.route('/EditarAlumno/<string:codigo>',methods=["GET", "POST"])
 @login_required 
 def rellenoAlumn(codigo):
    cursor = db.cursor()
-   query = "SELECT Id, NameCareer FROM Career"
-   rows = cursor.execute(query).fetchall()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
+   query1 = "SELECT Id, NameCareer FROM Career"
+   rows = cursor.execute(query1).fetchall()
 
    Año = "SELECT *FROM School_Year"
    row = cursor.execute(Año).fetchall()
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
 
    query = cursor.execute("SELECT *FROM Students WHERE Code = ?",(codigo)).fetchone()
+   #print(query)
    cursor.close()
-   return render_template("alumnos.html",title = "Edit Student",hr = "" ,edit = query, carreras = rows , Años = row, generos = genero)
+   flash("Editando datos de Alumno")
+   return render_template("alumnos.html",title = "Edit Student",hr = "" ,edit = query,cantidad = 0,total = 1,inic= inic, limit =limit, carreras = rows , Años = row, generos = genero)
 
 
 @app.route('/EditarDocente/<string:codigo>', methods=["GET","POST"])
 @login_required 
 def rellenoDocent(codigo):
    cursor = db.cursor()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
    dep = cursor.execute("SELECT Id , NameDepartament FROM Departament").fetchall()
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
    docent = cursor.execute("SELECT *FROM Teachers WHERE Code = ?",(codigo)).fetchone()
    cursor.close()
-   return render_template("maestros.html",edit = docent, dep = dep, generos = genero)
+   flash("Editando docente")
+   return render_template("maestros.html",edit = docent,cantidad = 0,total = 1,inic= inic, limit =limit, dep = dep, generos = genero)
 
 
 @app.route('/EditarClase/<string:codigo>', methods = ["GET","POST"])
 @login_required 
 def rellenoclase(codigo):
    cursor = db.cursor()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
    carrera = cursor.execute("SELECT *FROM Career").fetchall()
    Año = cursor.execute("SELECT *FROM School_Year").fetchall()
    clase = cursor.execute("SELECT *FROM Classes WHERE Code = ?",(codigo)).fetchone()
    cursor.close()
-   return render_template("materias.html", edit = clase, carreras = carrera, años = Año)
+   return render_template("materias.html", edit = clase, cantidad = 0,total = 1,inic= inic, limit =limit, carreras = carrera, años = Año)
 
 @app.route('/EditarCarrera/<int:id>', methods=["GET","POST"])
 @login_required 
@@ -482,13 +505,16 @@ def rellenoubi(id):
 @login_required 
 def rellenoAsig(code):
    cursor = db.cursor()
+   limit = int(request.args.get('limit',default=10))
+   inic = int(request.args.get('inic',default=0))
    docent = cursor.execute("SELECT Id ,NameTeacher FROM Teachers").fetchall()
    clase = cursor.execute("SELECT Id, NameClasse FROM Classes").fetchall()
    dia = cursor.execute("SELECT Id, NameDay FROM Days").fetchall()
    lugar = cursor.execute("SELECT Id, Nameplace FROM Place").fetchall()
    cod = cursor.execute("EXEC usp_RellenoAsign ?", code).fetchone()   
    consult = cursor.execute("SELECT *FROM School_Hours s INNER JOIN Assignment a ON a.School_Hours_Id = s.Id WHERE s.Code = ?",(code)).fetchone()
-   return render_template("asignaciones.html",hr = cod ,edit = consult,clase = clase, maestros = docent, lugares = lugar, dias = dia)
+   flash("Editanto Asignacion")
+   return render_template("asignaciones.html",hr = cod ,edit = consult,cantidad = 0,total = 1,inic= inic, limit =limit,clase = clase, maestros = docent, lugares = lugar, dias = dia)
 
 @app.route('/EditarAsistencia/<int:id>', methods=["GET","POST"])
 @login_required 

@@ -1,5 +1,3 @@
-from itertools import count
-import math
 from os import remove
 from flask import Flask, render_template, redirect, session, request, flash, send_file, url_for,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -258,8 +256,8 @@ def asign():
       ida = request.form.get("Id")
       horario_id = idprox("School_Hours")
          
-      verificar_Horario = cursor.execute("SELECT MAX(Id) FROM School_Hours").fetchone()
-      if verificar_Horario[0] is None:
+      verificar_Horario = cursor.execute("SELECT Day_Id  FROM School_Hours WHERE StartTime BETWEEN  ? AND ?",hora_ini,hora_fin).fetchone()
+      if verificar_Horario is None:
          cursor.execute("INSERT INTO School_Hours (StartTime,EndTime,Day_Id,Place_Id) VALUES(?,?,?,?)",
                         (hora_ini,hora_fin,dia_Id,lugar_id)) 
          cursor.commit()

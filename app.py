@@ -360,7 +360,7 @@ def viewAl():
    genero = cursor.execute("SELECT Id, NameGender FROM Gender").fetchall()
 
    #Procedimiento almacenado que muestra informacion de estudiantes
-   consulta = cursor.execute("EXEC usp_ViewStudent").fetchall()
+   consulta = cursor.execute("EXEC usp_ViewStudent ?,?", inic, limit).fetchall()
    #print(consulta)
    #Verifica si existe o no
    if len(consulta) == 0 or inic >= int(long):
